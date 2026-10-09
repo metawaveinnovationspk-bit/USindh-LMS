@@ -142,33 +142,32 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 no-print shadow-2xs">
-      {/* 1. Dignified Institutional Top Utility Ribbon */}
-      <div className="bg-[#05182e] text-white text-[11px] px-3 sm:px-6 py-1.5 flex items-center justify-between gap-3 border-b border-[#030e1d]">
+      {/* 1. Dignified Institutional Top Utility Ribbon — Official Emblem Blue & Olive Theme */}
+      <div className="bg-[#004b87] text-white text-[11px] px-3 sm:px-6 py-1.5 flex items-center justify-between gap-3 border-b border-[#003865]">
         <div className="flex items-center gap-2.5 flex-wrap">
-          <span className="font-serif-academic text-[12px] tracking-wide text-amber-300 font-semibold hidden md:inline">
+          <span className="font-serif-academic text-[12px] tracking-wide text-[#c8e27b] font-semibold hidden md:inline">
             اُطْلُبُوا الْعِلْمَ مِنَ الْمَهْدِ إِلَى اللَّحْدِ
           </span>
-          <span className="text-white/20 hidden md:inline">|</span>
-          <span className="font-semibold text-slate-100 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-white/25 hidden md:inline">·</span>
+          <span className="font-semibold text-white flex items-center gap-1.5">
             <span>UNIVERSITY OF SINDH</span>
           </span>
-          <span className="text-white/20 hidden sm:inline">|</span>
-          <span className="text-slate-300 hidden sm:inline font-mono text-[10px]">
+          <span className="text-white/25 hidden sm:inline">·</span>
+          <span className="text-slate-200 hidden sm:inline font-mono text-[10px]">
             ALLAMA II QAZI CAMPUS, JAMSHORO · ESTD. 1947
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-slate-300 text-[11px] font-mono">
-          <div className="hidden lg:flex items-center gap-1.5 text-emerald-300">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+        <div className="flex items-center gap-3 text-slate-200 text-[11px] font-mono">
+          <div className="hidden lg:flex items-center gap-1.5 text-[#c8e27b]">
+            <CheckCircle2 className="w-3 h-3 text-[#a3c644]" />
             <span>HEC W4 Ranked · Session Fall 2026</span>
           </div>
-          <span className="text-white/20 hidden lg:inline">|</span>
-          <div className="flex items-center gap-1 text-slate-300 text-[11px]">
-            <PhoneCall className="w-3 h-3 text-amber-300" />
+          <span className="text-white/25 hidden lg:inline">·</span>
+          <div className="flex items-center gap-1 text-slate-100 text-[11px]">
+            <PhoneCall className="w-3 h-3 text-[#c8e27b]" />
             <span className="hidden sm:inline">ITSC: </span>
-            <span className="text-amber-300 font-semibold">022-9213181</span>
+            <span className="text-[#c8e27b] font-semibold">022-9213181</span>
           </div>
         </div>
       </div>
@@ -197,34 +196,34 @@ export const Header: React.FC<HeaderProps> = ({
             <UniversitySeal size="md" />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#0a2342] group-hover:text-blue-900 transition-colors leading-none font-sans">
+                <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#004b87] group-hover:text-[#0068b5] transition-colors leading-none font-sans">
                   UNIVERSITY OF SINDH
                 </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-50 text-amber-900 border border-amber-200 font-bold hidden sm:inline">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#eef4e3] text-[#4c6418] border border-[#84a433]/40 font-bold hidden sm:inline">
                   CENTRAL LMS
                 </span>
               </div>
-              <div className="text-[11px] text-slate-500 font-medium leading-tight mt-1 flex items-center gap-1">
+              <div className="text-[11px] text-slate-600 font-medium leading-tight mt-1 flex items-center gap-1">
                 <span>Allama II Qazi Campus</span>
                 <span className="text-slate-300 hidden md:inline">·</span>
-                <span className="text-slate-400 font-mono hidden md:inline">Jamshoro</span>
+                <span className="text-[#0068b5] font-mono hidden md:inline">Jamshoro</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Center: Global Master Navigation Tabs (Desktop & Tablet) */}
-        <nav aria-label="Global Academic Navigation" className="hidden lg:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/90 text-xs font-semibold">
+        <nav aria-label="Global Academic Navigation" className="hidden lg:flex items-center gap-1 bg-[#e8ecef] p-1 rounded-xl border border-[#d8dadb] text-xs font-semibold">
           {/* 1. Portal Home */}
           <button
             onClick={() => handleNavigate('public')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'public'
-                ? 'bg-[#0a2342] text-white shadow-xs font-bold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                ? 'bg-[#0068b5] text-white shadow-xs font-bold'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            <Building2 className={`w-3.5 h-3.5 ${currentRole === 'public' ? 'text-amber-300' : 'text-slate-500'}`} />
+            <Building2 className={`w-3.5 h-3.5 ${currentRole === 'public' ? 'text-[#c8e27b]' : 'text-[#0068b5]'}`} />
             <span>Home</span>
           </button>
 
@@ -233,11 +232,11 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => handleNavigate('student')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'student'
-                ? 'bg-[#0a2342] text-white shadow-xs font-bold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                ? 'bg-[#0068b5] text-white shadow-xs font-bold'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            <GraduationCap className={`w-3.5 h-3.5 ${currentRole === 'student' ? 'text-amber-300' : 'text-emerald-600'}`} />
+            <GraduationCap className={`w-3.5 h-3.5 ${currentRole === 'student' ? 'text-[#c8e27b]' : 'text-[#007a33]'}`} />
             <span>Student LMS</span>
           </button>
 
@@ -246,22 +245,22 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => handleNavigate('faculty')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'faculty'
-                ? 'bg-[#0a2342] text-white shadow-xs font-bold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                ? 'bg-[#0068b5] text-white shadow-xs font-bold'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            <UserCheck className={`w-3.5 h-3.5 ${currentRole === 'faculty' ? 'text-amber-300' : 'text-blue-600'}`} />
+            <UserCheck className={`w-3.5 h-3.5 ${currentRole === 'faculty' ? 'text-[#c8e27b]' : 'text-[#0068b5]'}`} />
             <span>Faculty</span>
           </button>
 
           {/* 4. Admissions 2026 */}
           <button
             onClick={handleAdmissionsClick}
-            className="px-3 py-1.5 rounded-lg text-slate-700 hover:text-blue-900 hover:bg-white/80 transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap font-medium"
+            className="px-3 py-1.5 rounded-lg text-slate-700 hover:text-[#004b87] hover:bg-white/80 transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap font-medium"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#007a33]" />
             <span>Admissions</span>
-            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-100 text-amber-900 font-bold">2026</span>
+            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#eef4e3] text-[#4c6418] border border-[#84a433]/40 font-bold">2026</span>
           </button>
 
           {/* 5. Parent Portal */}
@@ -269,11 +268,11 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => handleNavigate('parent')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'parent'
-                ? 'bg-[#0a2342] text-white shadow-xs font-bold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                ? 'bg-[#0068b5] text-white shadow-xs font-bold'
+                : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            <HeartHandshake className={`w-3.5 h-3.5 ${currentRole === 'parent' ? 'text-amber-300' : 'text-teal-600'}`} />
+            <HeartHandshake className={`w-3.5 h-3.5 ${currentRole === 'parent' ? 'text-[#c8e27b]' : 'text-[#007a33]'}`} />
             <span>Parents</span>
           </button>
 
@@ -284,11 +283,11 @@ export const Header: React.FC<HeaderProps> = ({
               onBlur={() => setTimeout(() => setGovernanceMenuOpen(false), 200)}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 isGovernanceRole
-                  ? 'bg-[#0a2342] text-white shadow-xs font-bold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                  ? 'bg-[#0068b5] text-white shadow-xs font-bold'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
               }`}
             >
-              <School className={`w-3.5 h-3.5 ${isGovernanceRole ? 'text-amber-300' : 'text-slate-500'}`} />
+              <School className={`w-3.5 h-3.5 ${isGovernanceRole ? 'text-[#c8e27b]' : 'text-[#9e6338]'}`} />
               <span>Governance</span>
               <ChevronDown className={`w-3 h-3 transition-transform ${governanceMenuOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -520,11 +519,11 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* 4. LUMS Sakai Benchmark: Persistent Course Sites Quick-Jump Ribbon (When inside Student) */}
       {currentRole === 'student' && (
-        <div className="bg-[#0a2342] text-white text-xs border-t border-[#133e87]/70 select-none no-print overflow-x-auto shadow-inner">
+        <div className="bg-[#004b87] text-white text-xs border-t border-[#0068b5] select-none no-print overflow-x-auto shadow-inner">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-9 gap-3">
             <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 font-mono shrink-0 mr-1 flex items-center gap-1">
-                <BookOpen className="w-3 h-3 text-amber-400" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#c8e27b] font-mono shrink-0 mr-1 flex items-center gap-1">
+                <BookOpen className="w-3 h-3 text-[#c8e27b]" />
                 <span>My Courses:</span>
               </span>
 
@@ -538,23 +537,23 @@ export const Header: React.FC<HeaderProps> = ({
                     }}
                     className={`px-2.5 py-1 rounded text-xs font-medium font-mono shrink-0 flex items-center gap-1.5 transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-slate-900 font-bold shadow-xs ring-1 ring-white'
-                        : 'text-slate-300 hover:text-white hover:bg-white/10'
+                        ? 'bg-white text-[#004b87] font-bold shadow-xs ring-1 ring-white'
+                        : 'text-slate-200 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <span>{course.code}</span>
                     {isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#84a433]" />
                     )}
                   </button>
                 );
               })}
             </div>
 
-            <div className="hidden md:flex items-center gap-3 shrink-0 text-[11px] text-slate-300 font-mono">
-              <span className="text-slate-200">Department: {activeDepartmentName} ({activeBatchName})</span>
-              <span className="text-slate-600" aria-hidden="true">|</span>
-              <span className="text-emerald-400 font-semibold">● 75% HEC Verified</span>
+            <div className="hidden md:flex items-center gap-3 shrink-0 text-[11px] text-slate-200 font-mono">
+              <span className="text-white">Department: {activeDepartmentName} ({activeBatchName})</span>
+              <span className="text-white/30" aria-hidden="true">|</span>
+              <span className="text-[#c8e27b] font-semibold">75% HEC Verified</span>
             </div>
           </div>
         </div>
@@ -562,11 +561,11 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Faculty Persistent Course Sites Quick-Jump Ribbon (When inside Faculty) */}
       {currentRole === 'faculty' && (
-        <div className="bg-[#0f2d59] text-white text-xs border-t border-[#133e87]/70 select-none no-print overflow-x-auto">
+        <div className="bg-[#004b87] text-white text-xs border-t border-[#0068b5] select-none no-print overflow-x-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-9 gap-3">
             <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 font-mono shrink-0 mr-1 flex items-center gap-1">
-                <UserCheck className="w-3 h-3 text-amber-300" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#c8e27b] font-mono shrink-0 mr-1 flex items-center gap-1">
+                <UserCheck className="w-3 h-3 text-[#c8e27b]" />
                 <span>Teaching Roster:</span>
               </span>
 

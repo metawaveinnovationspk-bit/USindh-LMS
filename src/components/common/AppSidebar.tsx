@@ -352,12 +352,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       }`}
     >
       {/* Top Sidebar Header with Role Status & Collapse button */}
-      <div className="h-14 flex items-center justify-between px-3 border-b border-slate-100 bg-slate-50/50">
+      <div className="h-14 flex items-center justify-between px-3 border-b border-[#d8dadb] bg-[#f4f6f8]">
         {!isCollapsed && (
           <div className="flex items-center gap-2 overflow-hidden min-w-0">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-[#84a433] shrink-0" />
             <div className="truncate">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-800 leading-tight">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#004b87] leading-tight">
                 {currentRole === 'chairman' ? 'CHAIRMAN DESK' : `${currentRole.toUpperCase()} WORKSPACE`}
               </div>
               <div className="text-[9px] text-slate-500 font-mono">UOS Allama II Qazi</div>
@@ -394,13 +394,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                       onClick={() => onTabChange(item.id)}
                       className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer group ${
                         isActive
-                          ? 'bg-[#0b2545] text-white font-semibold shadow-2xs'
+                          ? 'bg-[#0068b5] text-white font-semibold shadow-2xs'
                           : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/90'
                       }`}
                       title={isCollapsed ? item.label : undefined}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-800'}`}>
+                        <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-[#004b87]'}`}>
                           {item.icon}
                         </span>
                         {!isCollapsed && <span className="truncate">{item.label}</span>}
@@ -414,7 +414,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                                 ? 'bg-rose-100 text-rose-800'
                                 : isActive 
                                   ? 'bg-white/20 text-white' 
-                                  : 'bg-amber-100 text-amber-900'
+                                  : 'bg-[#eef4e3] text-[#4c6418]'
                             }`}>
                               {item.badge}
                             </span>

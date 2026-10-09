@@ -9,20 +9,22 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onSelectRole }) => {
   return (
-    <footer className="bg-slate-900 text-slate-300 text-sm border-t border-slate-800 no-print">
+    <footer className="bg-[#031f39] text-slate-300 text-sm border-t border-[#004b87] no-print">
       {/* Top Banner */}
-      <div className="bg-[#0b1e3b] border-b border-slate-800 py-6 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004b87] border-b border-[#0068b5]/40 py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-center md:text-left">
-            <UniversitySeal size="lg" />
+          <div className="flex items-center gap-3.5 text-center md:text-left">
+            <div className="p-1.5 bg-white rounded-2xl border-2 border-[#d8dadb] shadow-sm shrink-0">
+              <UniversitySeal size="lg" />
+            </div>
             <div>
               <h3 className="text-white font-extrabold text-base tracking-tight font-sans">
                 UNIVERSITY OF SINDH
               </h3>
-              <p className="text-amber-300 font-semibold text-xs mt-0.5">
+              <p className="text-[#c8e27b] font-semibold text-xs mt-0.5">
                 Allama II Qazi Campus, Jamshoro · Central Learning Management System (LMS)
               </p>
-              <p className="text-slate-400 text-[11px] mt-0.5">
+              <p className="text-slate-200 text-[11px] mt-0.5">
                 Maintained by Faculty of Engineering &amp; Technology (FET), University of Sindh · ITSC Data Center
               </p>
             </div>
@@ -31,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => onSelectRole('architecture')}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2 bg-[#84a433] hover:bg-[#739129] text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Inspect Technical Modernization Report</span>
@@ -44,50 +46,50 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Col 1: Institutional & Academic Context */}
         <div className="space-y-3">
-          <div className="text-white font-bold text-sm uppercase tracking-wider text-amber-400">
+          <div className="font-bold text-sm uppercase tracking-wider text-[#c8e27b]">
             Institutional Leadership
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-300 leading-relaxed">
             Established in 1947, the University of Sindh is the second oldest university in Pakistan, empowering over 40,000 students across 6 campuses.
           </p>
-          <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700/60 text-xs space-y-1.5">
+          <div className="bg-white/5 p-3 rounded-lg border border-white/10 text-xs space-y-1.5">
             <div>
               <span className="text-slate-400">Vice-Chancellor: </span>
-              <strong className="text-slate-200">Prof. Dr. Muhammad Siddique Kalhoro</strong>
+              <strong className="text-white">Prof. Dr. Muhammad Siddique Kalhoro</strong>
             </div>
             <div>
               <span className="text-slate-400">Scope: </span>
-              <strong className="text-slate-200">14 Faculties • 68 Departments</strong>
+              <strong className="text-white">14 Faculties • 68 Departments</strong>
             </div>
             <div>
               <span className="text-slate-400">Campus: </span>
-              <span className="text-amber-300 font-semibold">Jamshoro • Elsa Kazi Hyderabad</span>
+              <span className="text-[#c8e27b] font-semibold">Jamshoro • Elsa Kazi Hyderabad</span>
             </div>
           </div>
         </div>
 
         {/* Col 2: Engineering Partner (MetaWave Innovations) */}
         <div className="space-y-3">
-          <div className="text-white font-bold text-sm uppercase tracking-wider text-amber-400">
+          <div className="font-bold text-sm uppercase tracking-wider text-[#c8e27b]">
             Modernization Initiative
           </div>
           <div className="flex items-center gap-2 text-white font-semibold text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#84a433]" />
             <span>MetaWave Innovations Ltd.</span>
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Theme: <strong className="text-slate-200">Smart Systems — Engineering — Growth</strong>.
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Theme: <strong className="text-white">Smart Systems — Engineering — Growth</strong>.
             Central LMS modernization standard benchmarked against LUMS and NUST academic workflows.
           </p>
-          <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <Lock className="w-3.5 h-3.5 text-[#a3c644]" />
             <span>Unified Centralized Platform for all Teachers, Staff & Students</span>
           </div>
         </div>
 
         {/* Col 3: Academic Portals & Quick Switch */}
         <div className="space-y-3">
-          <div className="text-white font-bold text-sm uppercase tracking-wider text-amber-400">
+          <div className="font-bold text-sm uppercase tracking-wider text-[#c8e27b]">
             University Role Hierarchy
           </div>
           <ul className="text-xs space-y-1.5 text-slate-400">
@@ -136,7 +138,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole }) => {
 
         {/* Col 4: Compliance & Digital Resources */}
         <div className="space-y-3">
-          <div className="text-white font-bold text-sm uppercase tracking-wider text-amber-400">
+          <div className="font-bold text-sm uppercase tracking-wider text-[#c8e27b]">
             Standards & Compliance
           </div>
           <div className="space-y-2 text-xs text-slate-400">

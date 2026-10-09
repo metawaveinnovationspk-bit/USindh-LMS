@@ -3,6 +3,7 @@ import { UserRole, NotificationItem, AuditLogItem } from './types';
 import { SYSTEM_NOTIFICATIONS, AUDIT_LOGS_STREAM, MULTI_DEPARTMENT_STUDENTS, CURRENT_STUDENT } from './data/mockAcademicData';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
+import { UniversitySeal } from './components/common/UniversitySeal';
 import { AppSidebar } from './components/common/AppSidebar';
 import { MobileBottomNav } from './components/common/MobileBottomNav';
 import { NotificationDrawer } from './components/common/NotificationDrawer';
@@ -246,12 +247,14 @@ export default function App() {
       {isMobileDrawerOpen && (
         <div className="fixed inset-0 z-50 flex justify-start bg-slate-900/50 backdrop-blur-xs lg:hidden animate-in fade-in">
           <div className="w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col border-r border-slate-200 animate-in slide-in-from-left">
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-[#0b2545] text-white">
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-black text-amber-400 text-lg">UoS</span>
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-[#004b87] text-white">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1 bg-white rounded-xl border border-[#d8dadb] shrink-0">
+                  <UniversitySeal size="sm" />
+                </div>
                 <div className="text-xs font-bold leading-tight">
                   University of Sindh LMS
-                  <div className="text-[10px] font-normal text-slate-300">Concept / Prototype</div>
+                  <div className="text-[10px] font-normal text-[#c8e27b]">Allama II Qazi Campus</div>
                 </div>
               </div>
               <button 

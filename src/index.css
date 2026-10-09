@@ -2,16 +2,21 @@
 
 @layer base {
   :root {
-    --uos-navy-primary: #0b2545;
-    --uos-navy-secondary: #133e87;
-    --uos-slate-bg: #f8fafc;
+    /* Official University of Sindh Emblem Color Palette */
+    --uos-navy-primary: #004b87;      /* Official Emblem Deep Sea Blue */
+    --uos-navy-secondary: #0068b5;    /* Official Emblem Torch & Sea Cerulean Blue */
+    --uos-sindh-olive: #84a433;       /* Official Emblem Sindh Map Olive-Leaf Green */
+    --uos-palm-green: #007a33;        /* Official Emblem Palm Tree Emerald Green */
+    --uos-silver-ring: #d8dadb;       /* Official Emblem Inscription Ring Silver-Grey */
+    --uos-terracotta: #9e6338;        /* Official Emblem Minaret & Torch Terracotta Brown */
+    --uos-slate-bg: #f4f6f8;
     --uos-card-surface: #ffffff;
-    --uos-border: #e2e8f0;
+    --uos-border: #d8dadb;
     --uos-text-main: #0f172a;
-    --uos-text-muted: #64748b;
-    --uos-gold-accent: #b45309;
-    --uos-emerald-safe: #059669;
-    --uos-amber-attention: #d97706;
+    --uos-text-muted: #475569;
+    --uos-gold-accent: #84a433;
+    --uos-emerald-safe: #007a33;
+    --uos-amber-attention: #9e6338;
     --uos-rose-critical: #dc2626;
   }
 
@@ -33,9 +38,9 @@
     font-family: 'Cinzel', serif;
   }
 
-  /* Universal Accessible Focus Rings (WCAG 2.2 AA) */
+  /* Universal Accessible Focus Rings (WCAG 2.2 AA) — Official Sindh Cerulean Blue */
   :focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid #0068b5;
     outline-offset: 2px;
   }
 }
@@ -50,20 +55,20 @@
   }
 }
 
-/* Crisp Scrollbar */
+/* Crisp Scrollbar with Official Silver & Cerulean Accents */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #eef1f4;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #b8c0c7;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #0068b5;
 }
 
 /* Print styles for Transcripts, Examination Slips, Challans, and Audit Reports */
@@ -82,4 +87,3 @@
     margin: 1.5cm;
   }
 }
-

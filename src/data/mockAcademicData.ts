@@ -13,6 +13,7 @@ import {
   UniversityDepartment,
   UniversityTeacher
 } from '../types';
+import studentPortraitImg from '../assets/images/student_id_portrait_academic_1791409786948.jpg';
 
 export const CURRENT_STUDENT: StudentProfile = {
   id: 'std_2k23_swe_104',
@@ -26,7 +27,7 @@ export const CURRENT_STUDENT: StudentProfile = {
   email: 'ali.hassan23@usindh.edu.pk',
   phone: '+92 300 9284102',
   cnicMasked: '41302-******4-2',
-  avatarUrl: '/src/assets/images/student_id_portrait_academic_1791409786948.jpg',
+  avatarUrl: studentPortraitImg,
   gpa: 3.62,
   cgpa: 3.54,
   completedCredits: 104,
@@ -793,7 +794,7 @@ export const MULTI_DEPARTMENT_STUDENTS: StudentProfile[] = [
     email: 'ali.hassan23@usindh.edu.pk',
     phone: '+92 300 9284102',
     cnicMasked: '41302-******4-2',
-    avatarUrl: '/src/assets/images/student_id_portrait_academic_1791409786948.jpg',
+    avatarUrl: studentPortraitImg,
     gpa: 3.62,
     cgpa: 3.54,
     completedCredits: 104,
@@ -813,7 +814,7 @@ export const MULTI_DEPARTMENT_STUDENTS: StudentProfile[] = [
     email: 'abdul.hannan23@usindh.edu.pk',
     phone: '+92 312 3456789',
     cnicMasked: '41303-******1-1',
-    avatarUrl: '/src/assets/images/student_id_portrait_academic_1791409786948.jpg',
+    avatarUrl: studentPortraitImg,
     gpa: 3.58,
     cgpa: 3.48,
     completedCredits: 104,
@@ -833,7 +834,7 @@ export const MULTI_DEPARTMENT_STUDENTS: StudentProfile[] = [
     email: 'haris.ansari23@usindh.edu.pk',
     phone: '+92 334 7891234',
     cnicMasked: '41302-******8-4',
-    avatarUrl: '/src/assets/images/student_id_portrait_academic_1791409786948.jpg',
+    avatarUrl: studentPortraitImg,
     gpa: 3.72,
     cgpa: 3.65,
     completedCredits: 104,
@@ -853,7 +854,7 @@ export const MULTI_DEPARTMENT_STUDENTS: StudentProfile[] = [
     email: 'dua.bba23@usindh.edu.pk',
     phone: '+92 301 9876543',
     cnicMasked: '41301-******9-7',
-    avatarUrl: '/src/assets/images/student_id_portrait_academic_1791409786948.jpg',
+    avatarUrl: studentPortraitImg,
     gpa: 3.80,
     cgpa: 3.75,
     completedCredits: 64,
