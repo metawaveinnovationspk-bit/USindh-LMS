@@ -79,34 +79,36 @@ export const VcPortal: React.FC<VcPortalProps> = ({
     : UNIVERSITY_FACULTIES.filter(f => f.id === selectedFacultyFilter);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
       {/* Executive University Leadership Banner */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden">
-        <div className="bg-[#0f2942] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#0a1f33]">
-          <div className="flex items-center gap-3.5">
-            <UniversitySeal size="sm" monochrome={false} />
+      <div className="bg-white border border-[#d8dadb] rounded-2xl shadow-2xs overflow-hidden">
+        <div className="bg-[#004b87] text-white px-4 sm:px-6 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#003865]">
+          <div className="flex items-center gap-3">
+            <div className="p-1 bg-white rounded-xl border border-[#d8dadb] shrink-0">
+              <UniversitySeal size="sm" monochrome={false} />
+            </div>
             <div>
-              <div className="text-[11px] font-semibold tracking-wider text-amber-300 uppercase font-mono">
+              <div className="text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#c8e27b] uppercase font-mono">
                 Vice-Chancellor Executive Secretariat
               </div>
-              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h1 className="text-sm sm:text-lg font-bold text-white tracking-tight">
                 University of Sindh, Jamshoro — Central Academic Command
               </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 text-xs text-slate-300 font-mono">
+          <div className="flex items-center gap-2.5 text-xs text-slate-200 font-mono">
             <span className="hidden sm:inline">Session: <strong>Fall 2026</strong></span>
-            <span className="text-slate-500 hidden sm:inline" aria-hidden="true">·</span>
-            <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-white/30 hidden sm:inline" aria-hidden="true">·</span>
+            <span className="text-[#c8e27b] font-semibold flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#c8e27b] animate-pulse" />
               14 Faculties Synced
             </span>
           </div>
         </div>
 
         {/* VC Profile Context & University KPI Strip */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
+        <div className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
           <div className="lg:col-span-5 flex items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#0f2942] text-amber-300 flex items-center justify-center font-serif text-xl font-bold border border-slate-300/60 shadow-xs shrink-0">
               VC

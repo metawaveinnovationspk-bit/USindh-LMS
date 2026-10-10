@@ -72,29 +72,31 @@ export const DeanPortal: React.FC<DeanPortalProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
       {/* Dean Faculty Executive Lockup */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden">
-        <div className="bg-[#133e87] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#0d2d63]">
-          <div className="flex items-center gap-3.5">
-            <UniversitySeal size="sm" monochrome={false} />
+      <div className="bg-white border border-[#d8dadb] rounded-2xl shadow-2xs overflow-hidden">
+        <div className="bg-[#004b87] text-white px-4 sm:px-6 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#003865]">
+          <div className="flex items-center gap-3">
+            <div className="p-1 bg-white rounded-xl border border-[#d8dadb] shrink-0">
+              <UniversitySeal size="sm" monochrome={false} />
+            </div>
             <div>
-              <div className="text-[11px] font-semibold tracking-wider text-amber-300 uppercase font-mono">
+              <div className="text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#c8e27b] uppercase font-mono">
                 Office of the Dean • Board of Faculty
               </div>
-              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h1 className="text-sm sm:text-lg font-bold text-white tracking-tight">
                 {selectedFaculty.name}
               </h1>
             </div>
           </div>
 
           {/* Faculty Switcher */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-blue-200 hidden sm:inline">Active Faculty:</span>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <span className="text-xs text-[#c8e27b] hidden sm:inline">Faculty:</span>
             <select
               value={selectedFacultyId}
               onChange={(e) => setSelectedFacultyId(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer focus:outline-hidden"
+              className="w-full sm:w-auto min-h-[36px] px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer focus:outline-hidden"
             >
               {UNIVERSITY_FACULTIES.map(fac => (
                 <option key={fac.id} value={fac.id} className="text-slate-900 bg-white">
@@ -106,7 +108,7 @@ export const DeanPortal: React.FC<DeanPortalProps> = ({
         </div>
 
         {/* Dean Persona Lockup & Core Numbers */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
+        <div className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
           <div className="lg:col-span-5 flex items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#133e87] text-amber-300 flex items-center justify-center font-serif text-lg font-bold border border-slate-300/60 shadow-xs shrink-0">
               DEAN

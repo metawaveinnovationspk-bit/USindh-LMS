@@ -5,6 +5,7 @@ import {
   SYSTEM_MODERNIZATION_PHASES 
 } from '../../data/auditData';
 import { AuditClassification, DefectSeverity, AuditFinding } from '../../types';
+import { useSwipeNavigation, useAutoScrollActivePill } from '../../hooks/useSwipeNavigation';
 import { 
   FileText, 
   ShieldCheck, 
@@ -24,7 +25,9 @@ import {
   GitBranch,
   Activity,
   Terminal,
-  Download
+  Download,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 interface ArchitecturePortalProps {
@@ -34,6 +37,16 @@ interface ArchitecturePortalProps {
 export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
   const [activeTab, setActiveTab] = useState<'summary' | 'defects' | 'architecture' | 'database' | 'api' | 'security' | 'qa' | 'dr' | 'roadmap' | 'report'>('summary');
   
+  const archTabIds = ['summary', 'defects', 'architecture', 'database', 'api', 'security', 'qa', 'dr', 'roadmap', 'report'] as const;
+  const archSwipeHandlers = useSwipeNavigation<typeof archTabIds[number]>({
+    items: [...archTabIds],
+    activeItem: activeTab,
+    onSelect: setActiveTab,
+    minSwipeDistance: 42,
+    ignoreScrollableChildren: true
+  });
+  const archScrollRef = useAutoScrollActivePill(activeTab);
+
   // Filters for defects register
   const [filterClassification, setFilterClassification] = useState<AuditClassification | 'ALL'>('ALL');
   const [filterSeverity, setFilterSeverity] = useState<DefectSeverity | 'ALL'>('ALL');
@@ -78,7 +91,11 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div
+      onTouchStart={archSwipeHandlers.onTouchStart}
+      onTouchEnd={archSwipeHandlers.onTouchEnd}
+      className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6"
+    >
       {/* Executive Initiative Banner */}
       <div className="bg-gradient-to-r from-[#0f2c59] via-[#163668] to-[#0f2c59] rounded-2xl p-6 sm:p-8 text-white shadow-md border border-blue-900">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -118,33 +135,66 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-200 text-xs font-semibold no-print">
-        {[
-          { id: 'summary', label: 'Executive Summary', icon: <FileText className="w-4 h-4" /> },
-          { id: 'defects', label: 'Defect Register (LMS-001–020)', icon: <AlertTriangle className="w-4 h-4" /> },
-          { id: 'architecture', label: 'Target System Architecture', icon: <Layers className="w-4 h-4" /> },
-          { id: 'database', label: 'Relational Database Model', icon: <Database className="w-4 h-4" /> },
-          { id: 'api', label: 'RESTful API Blueprint', icon: <Server className="w-4 h-4" /> },
-          { id: 'security', label: 'Security & Data Protection', icon: <Lock className="w-4 h-4" /> },
-          { id: 'qa', label: 'Master QA Matrix', icon: <ShieldCheck className="w-4 h-4" /> },
-          { id: 'dr', label: 'Performance & Disaster Recovery', icon: <Activity className="w-4 h-4" /> },
-          { id: 'roadmap', label: 'Modernization Roadmap', icon: <GitBranch className="w-4 h-4" /> },
-          { id: 'report', label: 'Printable Formal Report', icon: <Printer className="w-4 h-4" /> }
-        ].map(tab => (
+      {/* Navigation Tabs (Supports Swipe-Left / Swipe-Right on Mobile) */}
+      <div
+        onTouchStart={archSwipeHandlers.onTouchStart}
+        onTouchEnd={archSwipeHandlers.onTouchEnd}
+        className="flex items-center justify-between gap-2 pb-1 border-b border-slate-200 text-xs font-semibold no-print select-none"
+      >
+        <div
+          ref={archScrollRef}
+          className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1"
+        >
+          {[
+            { id: 'summary', label: 'Executive Summary', icon: <FileText className="w-4 h-4 shrink-0" /> },
+            { id: 'defects', label: 'Defect Register (LMS-001–020)', icon: <AlertTriangle className="w-4 h-4 shrink-0" /> },
+            { id: 'architecture', label: 'Target System Architecture', icon: <Layers className="w-4 h-4 shrink-0" /> },
+            { id: 'database', label: 'Relational Database Model', icon: <Database className="w-4 h-4 shrink-0" /> },
+            { id: 'api', label: 'RESTful API Blueprint', icon: <Server className="w-4 h-4 shrink-0" /> },
+            { id: 'security', label: 'Security & Data Protection', icon: <Lock className="w-4 h-4 shrink-0" /> },
+            { id: 'qa', label: 'Master QA Matrix', icon: <ShieldCheck className="w-4 h-4 shrink-0" /> },
+            { id: 'dr', label: 'Performance & Disaster Recovery', icon: <Activity className="w-4 h-4 shrink-0" /> },
+            { id: 'roadmap', label: 'Modernization Roadmap', icon: <GitBranch className="w-4 h-4 shrink-0" /> },
+            { id: 'report', label: 'Printable Formal Report', icon: <Printer className="w-4 h-4 shrink-0" /> }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              data-nav-id={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`min-h-[38px] px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                activeTab === tab.id
+                  ? 'bg-[#0068b5] text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="flex lg:hidden items-center gap-1 pl-1 border-l border-slate-200 shrink-0">
           <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-3.5 py-2.5 rounded-lg flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === tab.id
-                ? 'bg-[#0f2c59] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
+            onClick={() => {
+              const idx = archTabIds.indexOf(activeTab);
+              setActiveTab(archTabIds[(idx - 1 + archTabIds.length) % archTabIds.length]);
+            }}
+            className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center cursor-pointer"
+            aria-label="Previous Blueprint Tab"
           >
-            {tab.icon}
-            <span>{tab.label}</span>
+            <ChevronLeft className="w-4 h-4" />
           </button>
-        ))}
+          <button
+            onClick={() => {
+              const idx = archTabIds.indexOf(activeTab);
+              setActiveTab(archTabIds[(idx + 1) % archTabIds.length]);
+            }}
+            className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center cursor-pointer"
+            aria-label="Next Blueprint Tab"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* TAB 1: EXECUTIVE SUMMARY */}

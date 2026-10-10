@@ -60,6 +60,7 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({
   const [payingChallan, setPayingChallan] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [challansList, setChallansList] = useState(FEE_CHALLANS);
+  const [receiptToast, setReceiptToast] = useState<string | null>(null);
 
   const handlePayChallan = (challanNo: string) => {
     setPayingChallan(challanNo);
@@ -124,30 +125,40 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-5 space-y-4 sm:space-y-5">
+      {receiptToast && (
+        <div className="fixed bottom-16 lg:bottom-6 right-4 left-4 sm:left-auto z-50 bg-[#004b87] text-white px-4 py-3 rounded-2xl shadow-2xl border border-[#84a433] flex items-center justify-between gap-3 animate-in slide-in-from-bottom duration-200">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#c8e27b] shrink-0" />
+            <span className="text-xs font-semibold">{receiptToast}</span>
+          </div>
+        </div>
+      )}
+
       {/* =========================================================
           GUARDIAN OFFICIAL IDENTITY & WARD OVERVIEW
          ========================================================= */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-white border border-[#d8dadb] rounded-2xl overflow-hidden shadow-2xs">
         {/* Top Institutional Header */}
-        <div className="bg-[#0b2545] text-white px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-[#081b33]">
-          <div className="flex items-center gap-3">
-            <UniversitySeal size="xs" />
+        <div className="bg-[#004b87] text-white px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-[#003865]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-0.5 bg-white rounded-lg border border-[#d8dadb]">
+              <UniversitySeal size="xs" />
+            </div>
             <div className="text-xs">
-              <span className="font-cinzel font-bold text-amber-300">UNIVERSITY OF SINDH, JAMSHORO</span>
-              <span className="text-slate-400 mx-1.5" aria-hidden="true">·</span>
-              <span className="text-slate-300 font-medium">Directorate of Student Affairs & Guardian Advisory</span>
+              <span className="font-bold text-[#c8e27b]">UNIVERSITY OF SINDH</span>
+              <span className="text-white/30 mx-1.5 hidden sm:inline" aria-hidden="true">·</span>
+              <span className="text-slate-200 font-medium hidden sm:inline">Parents &amp; Guardian Oversight Portal</span>
             </div>
           </div>
-          <div className="text-xs text-slate-300 font-mono">
-            <span>Verified Guardian: <strong className="text-white">Ali Muhammad Soomro</strong></span>
-            <span className="text-slate-500 mx-2" aria-hidden="true">·</span>
-            <span className="text-emerald-400 font-semibold">● Verified Kinship Registry</span>
+          <div className="text-[11px] text-slate-200 font-mono">
+            <span>Guardian: <strong className="text-white">Ali M. Soomro</strong></span>
+            <span className="text-[#c8e27b] font-semibold ml-2">● Verified</span>
           </div>
         </div>
 
         {/* Ward Academic Lockup & Metrics */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
           <div className="lg:col-span-5 flex items-start gap-4">
             <div className="relative shrink-0">
               <img
@@ -236,8 +247,8 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({
           </div>
         </div>
 
-        {/* Guardian Navigation Tabs */}
-        <div className="px-6 flex items-center gap-2 border-t border-slate-200 overflow-x-auto text-xs font-semibold bg-white">
+        {/* Guardian Navigation Tabs (Desktop only — Mobile uses sticky top 1-tap bar) */}
+        <div className="hidden lg:flex px-6 items-center gap-2 border-t border-slate-200 overflow-x-auto text-xs font-semibold bg-white">
           {[
             { id: 'overview', label: 'Ward Summary & Schedule', icon: <GraduationCap className="w-3.5 h-3.5" /> },
             { id: 'attendance', label: 'Attendance & 75% Rule', icon: <Clock className="w-3.5 h-3.5" /> },
@@ -598,7 +609,10 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({
                     </button>
                   ) : (
                     <button
-                      onClick={() => alert(`Verified Bank Paid Receipt downloaded for ${challan.challanNumber}`)}
+                      onClick={() => {
+                        setReceiptToast(`Verified Bank Paid Receipt downloaded for ${challan.challanNumber}`);
+                        setTimeout(() => setReceiptToast(null), 3500);
+                      }}
                       className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5" />

@@ -91,39 +91,39 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
       {/* ITSC Systems Console Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-purple-900 text-white flex items-center justify-center font-bold text-xl font-mono">
+      <div className="bg-white rounded-2xl border border-[#d8dadb] p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 shadow-2xs">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#004b87] text-[#c8e27b] flex items-center justify-center font-bold text-base sm:text-xl font-mono shrink-0">
             ITSC
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black text-slate-900">ITSC Enterprise Operations Console</h1>
-              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-purple-100 text-purple-900 border border-purple-200">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-base sm:text-xl font-black text-slate-900">ITSC Enterprise Operations Console</h1>
+              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[#eef4e3] text-[#4c6418] border border-[#84a433]/40">
                 Production Cluster
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-0.5">
               Information Technology Services Centre (ITSC) • University of Sindh, Jamshoro
             </p>
-            <div className="text-[11px] text-slate-400 mt-0.5">
-              Lead Systems Engineer: <strong className="text-slate-700">Engr. Kashif Laghari</strong> • Cluster ID: <span className="font-mono">uos-prod-jamshoro-01</span>
+            <div className="text-[11px] text-slate-400 mt-0.5 truncate">
+              Lead Engineer: <strong className="text-slate-700">Engr. Kashif Laghari</strong> • Cluster: <span className="font-mono">uos-prod-jamshoro-01</span>
             </div>
           </div>
         </div>
 
         {/* Live System Health Pulse */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200 text-xs font-semibold">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>All 8 Core Services Nominal</span>
+            <span>8 Core Services Nominal</span>
           </div>
           <button
             onClick={handleSimulateLoadSpike}
             disabled={simulatedSpike}
-            className="px-3.5 py-2 bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold rounded-xl transition-colors shadow-xs flex items-center gap-1.5"
+            className="min-h-[38px] px-3.5 py-2 bg-[#0068b5] hover:bg-[#004b87] text-white text-xs font-bold rounded-xl transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${simulatedSpike ? 'animate-spin' : ''}`} />
             <span>{simulatedSpike ? 'Simulating 15k Users...' : 'Simulate Result Load Spike'}</span>
@@ -131,8 +131,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 text-xs font-semibold pb-1">
+      {/* Tabs (Desktop only — Mobile uses sticky top 1-tap module bar) */}
+      <div className="hidden lg:flex items-center gap-2 border-b border-slate-200 text-xs font-semibold pb-1">
         {[
           { id: 'telemetry', label: 'Cluster Telemetry & Health', icon: <Activity className="w-4 h-4" /> },
           { id: 'results', label: 'Result Publication Pipeline', icon: <Award className="w-4 h-4" /> },

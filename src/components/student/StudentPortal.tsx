@@ -12,6 +12,7 @@ import {
 import { CourseWeeklyModules } from '../common/CourseWeeklyModules';
 import { GpaCalculatorModal } from '../common/GpaCalculatorModal';
 import { UniversitySeal } from '../common/UniversitySeal';
+import { useSwipeNavigation, useAutoScrollActivePill } from '../../hooks/useSwipeNavigation';
 import { Course } from '../../types';
 import { 
   GraduationCap, 
@@ -134,9 +135,25 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     'overview' | 'syllabus' | 'modules' | 'assignments' | 'gradebook' | 'attendance' | 'resources' | 'roster'
   >('modules');
 
+  const courseToolIds = ['modules', 'syllabus', 'assignments', 'gradebook', 'attendance', 'resources', 'roster'] as const;
+  const courseToolSwipe = useSwipeNavigation<string>({
+    items: [...courseToolIds],
+    activeItem: courseTool,
+    onSelect: (tool) => setCourseTool(tool as any),
+    minSwipeDistance: 40,
+    ignoreScrollableChildren: true
+  });
+  const courseToolScrollRef = useAutoScrollActivePill(courseTool);
+
   // Course Dashboard Filters (NUST LMS style)
   const [courseSearchQuery, setCourseSearchQuery] = useState('');
   const [courseCategoryFilter, setCourseCategoryFilter] = useState<'All' | 'In Progress' | 'High Attendance' | 'At Risk'>('All');
+  const categoryFilterSwipe = useSwipeNavigation<'All' | 'In Progress' | 'High Attendance' | 'At Risk'>({
+    items: ['All', 'In Progress', 'High Attendance', 'At Risk'],
+    activeItem: courseCategoryFilter,
+    onSelect: setCourseCategoryFilter,
+    minSwipeDistance: 35
+  });
 
   // Interactive Calendar State (NUST/LUMS style)
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<number>(8); // Oct 8, 2026
@@ -147,6 +164,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const [showGpaModal, setShowGpaModal] = useState<boolean>(false);
   const [showQrVerificationModal, setShowQrVerificationModal] = useState<boolean>(false);
   const [showOfficeHoursModal, setShowOfficeHoursModal] = useState<boolean>(false);
+  const [showCohortMenu, setShowCohortMenu] = useState<boolean>(false);
+  const [actionToast, setActionToast] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setActionToast(msg);
+    setTimeout(() => setActionToast(null), 3500);
+  };
   const [appealCourse, setAppealCourse] = useState<string>('CS-411');
   const [appealReason, setAppealReason] = useState<string>('');
   const [appealCategory, setAppealCategory] = useState<string>('Medical Emergency');
@@ -321,169 +345,197 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const calendarEventDates = [5, 8, 12, 15, 19, 22, 26, 29];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-5 space-y-4 sm:space-y-5">
+      {/* Non-blocking In-App Action Toast */}
+      {actionToast && (
+        <div className="fixed bottom-16 lg:bottom-6 right-4 left-4 sm:left-auto z-50 bg-[#004b87] text-white px-4 py-3 rounded-2xl shadow-2xl border border-[#84a433] flex items-center justify-between gap-3 animate-in slide-in-from-bottom duration-200">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <CheckCircle2 className="w-4 h-4 text-[#c8e27b] shrink-0" />
+            <span className="text-xs font-semibold truncate">{actionToast}</span>
+          </div>
+          <button
+            onClick={() => setActionToast(null)}
+            className="p-1 rounded-lg hover:bg-white/10 text-slate-200 cursor-pointer shrink-0"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* =========================================================
-          EXECUTIVE ACADEMIC PASSPORT STRIP (LUMS & NUST BENCHMARK)
+          EXECUTIVE ACADEMIC PASSPORT STRIP (MOBILE & DESKTOP)
          ========================================================= */}
-      <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden no-print">
-        <div className="px-5 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/70">
-          <div className="flex items-center gap-3.5">
+      <div className="bg-white border border-[#d8dadb] rounded-2xl shadow-2xs overflow-hidden no-print">
+        <div className="p-3.5 sm:px-5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3.5 border-b border-slate-100 bg-gradient-to-r from-[#004b87]/5 via-white to-[#84a433]/5">
+          <div className="flex items-start sm:items-center gap-3">
             <div className="relative shrink-0">
               <img
                 src={currentStudent.avatarUrl}
                 alt={currentStudent.name}
                 referrerPolicy="no-referrer"
-                className="w-13 h-13 rounded-lg object-cover border border-slate-200 shadow-2xs"
+                className="w-12 h-12 sm:w-13 sm:h-13 rounded-xl object-cover border-2 border-[#0068b5]/30 shadow-2xs"
               />
               <span 
-                className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" 
+                className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-[#007a33] border-2 border-white rounded-full" 
                 title="Active Enrolled Student"
               />
             </div>
 
-            <div className="space-y-0.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <h1 className="text-sm sm:text-lg font-extrabold text-[#004b87] tracking-tight leading-tight truncate">
                   {currentStudent.name}
                 </h1>
-                <span className="font-mono text-xs font-semibold px-2 py-0.2 rounded bg-blue-50 text-blue-900 border border-blue-200">
+                <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#0068b5]/10 text-[#004b87] border border-[#0068b5]/25">
                   {currentStudent.rollNumber}
                 </span>
 
-                {/* Professional Department & Batch Cohort Selector */}
-                <div className="relative group">
-                  <button 
-                    className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white border border-slate-300 text-slate-800 hover:border-slate-400 hover:bg-slate-50 flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                {/* Tap-Friendly Department & Batch Cohort Selector */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowCohortMenu(!showCohortMenu)}
+                    className="min-h-[30px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white border border-[#d8dadb] text-[#004b87] hover:border-[#0068b5] flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
                     title="Switch Department & Cohort Batch"
                   >
-                    <Building2 className="w-3.5 h-3.5 text-blue-700" />
-                    <span>{currentStudent.department.replace('Department of ', '').replace('Institute of ', '')} · {currentStudent.batch.split(' ')[0]}</span>
-                    <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-slate-600 transition-transform group-hover:rotate-180" />
+                    <Building2 className="w-3.5 h-3.5 text-[#0068b5] shrink-0" />
+                    <span className="truncate max-w-[150px] sm:max-w-none">
+                      {currentStudent.department.replace('Department of ', '').replace('Institute of ', '')} · {currentStudent.batch.split(' ')[0]}
+                    </span>
+                    <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${showCohortMenu ? 'rotate-180' : ''}`} />
                   </button>
 
-                  <div className="absolute left-0 mt-1 w-80 bg-white border border-slate-200 rounded-xl shadow-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-                    <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 mb-1 flex items-center justify-between">
-                      <span>Select Department & Batch Cohort</span>
-                      <span className="font-mono text-[9px] text-blue-600 font-semibold">4 University Batches</span>
-                    </div>
-                    {MULTI_DEPARTMENT_STUDENTS.map(std => {
-                      const isSelected = std.id === activeStudentId;
-                      return (
-                        <button
-                          key={std.id}
-                          onClick={() => setSelectedStudentId(std.id)}
-                          className={`w-full text-left p-2 rounded-lg text-xs transition-colors cursor-pointer flex items-center justify-between ${
-                            isSelected ? 'bg-blue-50 text-blue-900 font-semibold border border-blue-200' : 'hover:bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          <div>
-                            <div className="font-semibold text-slate-900">{std.name} · <span className="font-mono text-slate-500 font-normal">{std.rollNumber}</span></div>
-                            <div className="text-[10px] text-slate-500">{std.department}</div>
-                            <div className="text-[10px] text-amber-700 font-medium">{std.batch} · Sem {std.semester}</div>
-                          </div>
-                          {isSelected && <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  {showCohortMenu && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setShowCohortMenu(false)} />
+                      <div className="absolute left-0 mt-1.5 w-76 max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in duration-100">
+                        <div className="px-2.5 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 mb-1 flex items-center justify-between font-mono">
+                          <span>Switch Student Cohort</span>
+                          <span className="text-[9px] text-[#0068b5] font-bold">4 Batches</span>
+                        </div>
+                        {MULTI_DEPARTMENT_STUDENTS.map(std => {
+                          const isSelected = std.id === activeStudentId;
+                          return (
+                            <button
+                              key={std.id}
+                              onClick={() => {
+                                setSelectedStudentId(std.id);
+                                setShowCohortMenu(false);
+                              }}
+                              className={`w-full text-left p-2.5 rounded-xl text-xs transition-colors cursor-pointer flex items-center justify-between ${
+                                isSelected ? 'bg-[#0068b5]/10 text-[#004b87] font-bold border border-[#0068b5]/30' : 'hover:bg-slate-50 text-slate-700'
+                              }`}
+                            >
+                              <div className="min-w-0">
+                                <div className="font-bold text-slate-900 truncate">{std.name} · <span className="font-mono text-slate-500 font-normal">{std.rollNumber}</span></div>
+                                <div className="text-[10px] text-slate-500 truncate">{std.department}</div>
+                                <div className="text-[10px] text-[#4c6418] font-semibold">{std.batch} · Sem {std.semester}</div>
+                              </div>
+                              {isSelected && <span className="w-2 h-2 rounded-full bg-[#84a433] shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-              <div className="text-xs text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                <span className="font-semibold text-slate-800">{currentStudent.department}</span>
-                <span className="text-slate-300" aria-hidden="true">·</span>
-                <span>{currentStudent.program}</span>
+              <div className="text-[11px] sm:text-xs text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <span className="font-semibold text-slate-800 truncate">{currentStudent.program}</span>
                 <span className="text-slate-300" aria-hidden="true">·</span>
                 <span className="text-slate-500">Semester {currentStudent.semester} (Fall 2026)</span>
-                <span className="text-slate-300" aria-hidden="true">·</span>
-                <span className="text-slate-500 font-medium text-emerald-700">Cohort: {currentStudent.batch}</span>
+                <span className="text-slate-300 hidden sm:inline" aria-hidden="true">·</span>
+                <span className="font-semibold text-[#007a33] hidden sm:inline">Cohort: {currentStudent.batch}</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Snapshot Metrics */}
-          <div className="flex items-center gap-4 text-xs font-mono shrink-0">
-            <div 
+          {/* Quick Snapshot Metrics — 4-Column Responsive Grid on Mobile, Inline on Desktop */}
+          <div className="grid grid-cols-4 md:flex items-center gap-2 md:gap-4 pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-200/70 text-xs font-mono shrink-0">
+            <button
+              type="button"
               onClick={() => setActiveTab('results')}
-              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
-              title="Click to view full transcript & GPA simulator"
+              className="p-2 md:p-0 rounded-xl bg-[#f4f6f8] md:bg-transparent text-center md:text-right cursor-pointer hover:opacity-80 transition-opacity"
+              title="Tap to view transcript & GPA simulator"
             >
-              <span className="text-[10px] text-slate-400 uppercase font-sans block">Cumulative CGPA</span>
-              <strong className="text-base font-black text-[#0b2545] tabular-nums">{currentStudent.cgpa}</strong>
-            </div>
-            <div className="h-7 w-px bg-slate-200" />
-            <div 
+              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-sans block">CGPA</span>
+              <strong className="text-sm sm:text-base font-black text-[#004b87] tabular-nums">{currentStudent.cgpa}</strong>
+            </button>
+            <div className="hidden md:block h-7 w-px bg-slate-200" />
+            <button
+              type="button"
               onClick={() => setActiveTab('attendance')}
-              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
-              title="Click to view statutory attendance register"
+              className="p-2 md:p-0 rounded-xl bg-[#f4f6f8] md:bg-transparent text-center md:text-right cursor-pointer hover:opacity-80 transition-opacity"
+              title="Tap to view 75% attendance register"
             >
-              <span className="text-[10px] text-slate-400 uppercase font-sans block">Attendance</span>
-              <strong className="text-base font-black text-slate-900 tabular-nums">88%</strong>
-            </div>
-            <div className="h-7 w-px bg-slate-200" />
-            <div 
+              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-sans block">Attend</span>
+              <strong className="text-sm sm:text-base font-black text-[#007a33] tabular-nums">88%</strong>
+            </button>
+            <div className="hidden md:block h-7 w-px bg-slate-200" />
+            <button
+              type="button"
               onClick={() => setActiveTab('courses')}
-              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
-              title="Click to view credits"
+              className="p-2 md:p-0 rounded-xl bg-[#f4f6f8] md:bg-transparent text-center md:text-right cursor-pointer hover:opacity-80 transition-opacity"
+              title="Tap to view credits"
             >
-              <span className="text-[10px] text-slate-400 uppercase font-sans block">Credits</span>
-              <strong className="text-base font-black text-slate-900 tabular-nums">{currentStudent.completedCredits}</strong>
-              <span className="text-[10px] text-slate-400 font-sans">/{currentStudent.totalCredits}</span>
-            </div>
-            <div className="h-7 w-px bg-slate-200" />
-            <div 
+              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-sans block">Credits</span>
+              <strong className="text-sm sm:text-base font-black text-slate-900 tabular-nums">{currentStudent.completedCredits}</strong>
+              <span className="text-[9px] text-slate-400 font-sans hidden sm:inline">/{currentStudent.totalCredits}</span>
+            </button>
+            <div className="hidden md:block h-7 w-px bg-slate-200" />
+            <button
+              type="button"
               onClick={() => setActiveTab('fees')}
-              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
-              title="Click to view 1Link Fee ledger"
+              className="p-2 md:p-0 rounded-xl bg-amber-50/80 md:bg-transparent text-center md:text-right cursor-pointer hover:opacity-80 transition-opacity"
+              title="Tap to view 1Link Fee ledger"
             >
-              <span className="text-[10px] text-slate-400 uppercase font-sans block">Dues Ledger</span>
-              <strong className="text-xs font-bold text-amber-700 font-sans">1 Due (Exam)</strong>
-            </div>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-sans block">1Link Fee</span>
+              <strong className="text-[11px] sm:text-xs font-bold text-[#9e6338] font-sans">1 Due</strong>
+            </button>
           </div>
         </div>
 
-        {/* Academic Tab Context Bar (Zero Secondary Navbar Clutter) */}
-        <div className="px-5 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
-              {activeTab === 'overview' && <Home className="w-4 h-4 text-blue-900" />}
-              {activeTab === 'courses' && <BookOpen className="w-4 h-4 text-emerald-800" />}
-              {activeTab === 'selection' && <CheckSquare className="w-4 h-4 text-blue-900" />}
-              {activeTab === 'attendance' && <Clock className="w-4 h-4 text-amber-800" />}
-              {activeTab === 'assignments' && <FileText className="w-4 h-4 text-blue-900" />}
-              {activeTab === 'exams' && <Award className="w-4 h-4 text-purple-900" />}
-              {activeTab === 'results' && <GraduationCap className="w-4 h-4 text-emerald-800" />}
-              {activeTab === 'fees' && <CreditCard className="w-4 h-4 text-teal-800" />}
-              {activeTab === 'proforma' && <FileCheck2 className="w-4 h-4 text-indigo-800" />}
-              {activeTab === 'profile' && <UserCheck className="w-4 h-4 text-blue-900" />}
+        {/* Academic Tab Context Bar */}
+        <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 flex items-center justify-between gap-2 bg-white">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="p-1.5 sm:p-2 rounded-xl bg-[#0068b5]/10 text-[#004b87] shrink-0">
+              {activeTab === 'overview' && <Home className="w-4 h-4" />}
+              {activeTab === 'courses' && <BookOpen className="w-4 h-4" />}
+              {activeTab === 'selection' && <CheckSquare className="w-4 h-4" />}
+              {activeTab === 'attendance' && <Clock className="w-4 h-4" />}
+              {activeTab === 'assignments' && <FileText className="w-4 h-4" />}
+              {activeTab === 'exams' && <Award className="w-4 h-4" />}
+              {activeTab === 'results' && <GraduationCap className="w-4 h-4" />}
+              {activeTab === 'fees' && <CreditCard className="w-4 h-4" />}
+              {activeTab === 'proforma' && <FileCheck2 className="w-4 h-4" />}
+              {activeTab === 'profile' && <UserCheck className="w-4 h-4" />}
             </div>
-            <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
-                {activeTab === 'overview' && 'Academic Dashboard & Enrolled Courses'}
-                {activeTab === 'courses' && 'Course Learning Workspace (Sakai LMS Core)'}
-                {activeTab === 'selection' && 'Subject Pre-Registration & Elective Selection'}
-                {activeTab === 'attendance' && 'Statutory Attendance Register (75% Mandatory Rule)'}
-                {activeTab === 'assignments' && 'Continuous Assessment & Lab Deliverables'}
-                {activeTab === 'exams' && 'Examination Admit Card & Hall Seating Plan'}
-                {activeTab === 'results' && 'Cumulative Academic Transcript & CGPA'}
-                {activeTab === 'fees' && '1Link Kuickpay Digital Fee Settlement'}
-                {activeTab === 'proforma' && 'HEC Quality Enhancement Cell (QEC) Proforma'}
-                {activeTab === 'profile' && 'Student Identity Credentials & Digital RFID Card'}
+            <div className="min-w-0">
+              <h2 className="text-xs sm:text-base font-bold text-slate-900 leading-tight truncate">
+                {activeTab === 'overview' && 'Student Dashboard & Enrolled Courses'}
+                {activeTab === 'courses' && 'Course Learning Workspace'}
+                {activeTab === 'selection' && 'Online Subject Selection'}
+                {activeTab === 'attendance' && '75% Mandatory Attendance Register'}
+                {activeTab === 'assignments' && 'Assignments & Lab Deliverables'}
+                {activeTab === 'exams' && 'QR Examination Admit Slip'}
+                {activeTab === 'results' && 'Academic Transcript & CGPA'}
+                {activeTab === 'fees' && '1Link Digital Fee Challans'}
+                {activeTab === 'proforma' && 'HEC QEC Evaluation Proforma'}
+                {activeTab === 'profile' && 'Smart Campus ID Card'}
               </h2>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Allama II Qazi Campus · Department of Software Engineering, FET · Fall 2026
+              <p className="text-[10px] sm:text-[11px] text-slate-500 truncate hidden sm:block">
+                Allama II Qazi Campus · {currentStudent.department} · Fall 2026
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-            <button
-              onClick={() => setShowGpaModal(true)}
-              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-blue-900 border border-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
-            >
-              <Calculator className="w-3.5 h-3.5 text-blue-700" />
-              <span>GPA Simulator</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setShowGpaModal(true)}
+            className="min-h-[34px] px-2.5 sm:px-3 py-1.5 bg-[#f4f6f8] hover:bg-[#0068b5] text-[#004b87] hover:text-white border border-[#d8dadb] rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors shrink-0"
+          >
+            <Calculator className="w-3.5 h-3.5 shrink-0" />
+            <span>GPA Calc</span>
+          </button>
         </div>
       </div>
 
@@ -491,72 +543,135 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           TAB 1: DASHBOARD & COURSE OVERVIEW (NUST & LUMS BENCHMARK)
          ========================================================= */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column (8 cols): Course Cards Grid + Search/Filter Bar */}
-          <div className="lg:col-span-8 space-y-5">
-            {/* Course Filter & Search Bar */}
-            <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-              <div className="flex items-center gap-2 flex-1">
-                <Search className="w-4 h-4 text-slate-400 shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Search enrolled courses by title, code, instructor..."
-                  value={courseSearchQuery}
-                  onChange={(e) => setCourseSearchQuery(e.target.value)}
-                  className="w-full text-xs text-slate-800 placeholder:text-slate-400 bg-transparent outline-hidden"
-                />
+        <div className="space-y-4 sm:space-y-5">
+          {/* 1-Tap High-Engagement Student Quick Actions (Mobile-First Convenience) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            <button
+              onClick={() => setActiveTab('attendance')}
+              className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#d8dadb] hover:border-[#0068b5] shadow-2xs text-left flex items-center justify-between gap-2 transition-all cursor-pointer group"
+            >
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#007a33] block">75% Rule Status</span>
+                <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate mt-0.5">88% Attendance</div>
+                <span className="text-[10px] text-slate-500 block truncate">1 Alert (CS-411)</span>
+              </div>
+              <div className="p-2 rounded-xl bg-[#eef4e3] text-[#4c6418] group-hover:bg-[#84a433] group-hover:text-white transition-colors shrink-0">
+                <Clock className="w-4 h-4" />
+              </div>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('exams')}
+              className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#d8dadb] hover:border-[#0068b5] shadow-2xs text-left flex items-center justify-between gap-2 transition-all cursor-pointer group"
+            >
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#0068b5] block">Exam Controller</span>
+                <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate mt-0.5">QR Admit Slip</div>
+                <span className="text-[10px] text-slate-500 block truncate">Fall 2026 Ready</span>
+              </div>
+              <div className="p-2 rounded-xl bg-blue-50 text-[#0068b5] group-hover:bg-[#0068b5] group-hover:text-white transition-colors shrink-0">
+                <QrCode className="w-4 h-4" />
+              </div>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('fees')}
+              className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#d8dadb] hover:border-[#0068b5] shadow-2xs text-left flex items-center justify-between gap-2 transition-all cursor-pointer group"
+            >
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#9e6338] block">1Link Challan</span>
+                <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate mt-0.5">PKR 4,500 Due</div>
+                <span className="text-[10px] text-slate-500 block truncate">Pay Online Instant</span>
+              </div>
+              <div className="p-2 rounded-xl bg-amber-50 text-[#9e6338] group-hover:bg-[#9e6338] group-hover:text-white transition-colors shrink-0">
+                <CreditCard className="w-4 h-4" />
+              </div>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('assignments')}
+              className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#d8dadb] hover:border-[#0068b5] shadow-2xs text-left flex items-center justify-between gap-2 transition-all cursor-pointer group"
+            >
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#004b87] block">Course Tasks</span>
+                <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate mt-0.5">2 Pending Labs</div>
+                <span className="text-[10px] text-slate-500 block truncate">Upload Deliverable</span>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-100 text-[#004b87] group-hover:bg-[#004b87] group-hover:text-white transition-colors shrink-0">
+                <Upload className="w-4 h-4" />
+              </div>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Left Column (8 cols): Course Cards Grid + Search/Filter Bar */}
+            <div className="lg:col-span-8 space-y-4">
+              {/* Course Filter & Search Bar */}
+              <div className="bg-white border border-[#d8dadb] rounded-2xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                <div className="flex items-center gap-2 flex-1">
+                  <Search className="w-4 h-4 text-[#0068b5] shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Filter courses by title, code, or instructor..."
+                    value={courseSearchQuery}
+                    onChange={(e) => setCourseSearchQuery(e.target.value)}
+                    className="w-full text-xs text-slate-800 placeholder:text-slate-400 bg-transparent outline-hidden"
+                  />
+                </div>
+
+                <div
+                  onTouchStart={categoryFilterSwipe.onTouchStart}
+                  onTouchEnd={categoryFilterSwipe.onTouchEnd}
+                  className="flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0 text-xs border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100 select-none"
+                >
+                  {(['All', 'In Progress', 'High Attendance', 'At Risk'] as const).map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setCourseCategoryFilter(cat)}
+                      className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] font-semibold whitespace-nowrap ${
+                        courseCategoryFilter === cat
+                          ? 'bg-[#0068b5] text-white font-bold'
+                          : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center gap-1 shrink-0 text-xs border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
-                {(['All', 'In Progress', 'High Attendance', 'At Risk'] as const).map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setCourseCategoryFilter(cat)}
-                    className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer text-[11px] font-medium ${
-                      courseCategoryFilter === cat
-                        ? 'bg-[#0b2545] text-white font-bold'
-                        : 'text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* NUST LMS Benchmark: Modern Course Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredCourses.map((course) => {
-                const isShortage = course.attendancePercent < 75;
-                return (
-                  <div
-                    key={course.code}
-                    className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 hover:shadow-sm transition-all flex flex-col justify-between group"
-                  >
-                    {/* Course Card Header Banner */}
-                    <div className="p-4 bg-gradient-to-r from-[#0b2545] to-[#133e87] text-white relative overflow-hidden">
-                      {/* Subtle Geometric Background */}
-                      <div className="absolute right-0 top-0 bottom-0 w-32 opacity-10 pointer-events-none flex items-center justify-center">
-                        <BookOpen className="w-24 h-24 text-white" />
-                      </div>
-
-                      <div className="relative z-10 space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-mono font-bold text-amber-300 bg-white/10 px-2 py-0.5 rounded text-[11px]">
-                            {course.code}
-                          </span>
-                          <span className="text-[11px] text-slate-200 font-mono">
-                            {course.creditHours} Credit Hours
-                          </span>
+              {/* Modern Course Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+                {filteredCourses.map((course) => {
+                  const isShortage = course.attendancePercent < 75;
+                  return (
+                    <div
+                      key={course.code}
+                      className="bg-white border border-[#d8dadb] rounded-2xl overflow-hidden hover:border-[#0068b5] hover:shadow-md transition-all flex flex-col justify-between group"
+                    >
+                      {/* Course Card Header Banner */}
+                      <div className="p-3.5 sm:p-4 bg-gradient-to-r from-[#004b87] to-[#0068b5] text-white relative overflow-hidden">
+                        <div className="absolute right-0 top-0 bottom-0 w-28 opacity-10 pointer-events-none flex items-center justify-center">
+                          <BookOpen className="w-20 h-20 text-white" />
                         </div>
-                        <h3 className="font-bold text-sm text-white line-clamp-1 group-hover:text-amber-200 transition-colors">
-                          {course.title}
-                        </h3>
-                        <p className="text-[11px] text-slate-300">
-                          {course.instructor}
-                        </p>
+
+                        <div className="relative z-10 space-y-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-mono font-bold text-[#c8e27b] bg-black/20 px-2 py-0.5 rounded text-[11px]">
+                              {course.code}
+                            </span>
+                            <span className="text-[11px] text-slate-100 font-mono">
+                              {course.creditHours} Cr. Hrs
+                            </span>
+                          </div>
+                          <h3 className="font-bold text-sm text-white line-clamp-1 group-hover:text-[#c8e27b] transition-colors">
+                            {course.title}
+                          </h3>
+                          <p className="text-[11px] text-slate-200 truncate">
+                            {course.instructor}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
                     {/* Course Card Body */}
                     <div className="p-4 space-y-3.5 text-xs flex-1 flex flex-col justify-between">
@@ -604,9 +719,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                             setCourseTool('modules');
                             setActiveTab('courses');
                           }}
-                          className="px-3 py-1.5 bg-[#0b2545] hover:bg-blue-900 text-white rounded-lg font-bold text-[11px] transition-colors flex items-center gap-1 cursor-pointer"
+                          className="min-h-[36px] px-3 py-1.5 bg-[#0068b5] hover:bg-[#004b87] text-white rounded-xl font-bold text-[11px] transition-colors flex items-center gap-1 cursor-pointer"
                         >
-                          <span>Course Workspace</span>
+                          <span>Open Course</span>
                           <ArrowRight className="w-3 h-3" />
                         </button>
 
@@ -617,7 +732,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                               setCourseTool('syllabus');
                               setActiveTab('courses');
                             }}
-                            className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded cursor-pointer"
+                            className="min-h-[34px] px-2.5 py-1 text-slate-600 hover:text-[#004b87] hover:bg-slate-100 rounded-lg font-medium cursor-pointer"
                             title="Course Syllabus"
                           >
                             Syllabus
@@ -628,7 +743,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                               setCourseTool('gradebook');
                               setActiveTab('courses');
                             }}
-                            className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded cursor-pointer"
+                            className="min-h-[34px] px-2.5 py-1 text-slate-600 hover:text-[#004b87] hover:bg-slate-100 rounded-lg font-medium cursor-pointer"
                             title="Course Gradebook & OBE"
                           >
                             Grades
@@ -643,7 +758,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           </div>
 
           {/* Right Column (4 cols): LUMS/NUST Timeline & Academic Calendar Widgets */}
-          <div className="lg:col-span-4 space-y-5">
+          <div className="lg:col-span-4 space-y-4">
             {/* Interactive Academic Mini-Calendar Widget (NUST/LUMS Style) */}
             <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-2xs">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -779,11 +894,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </p>
               <button
                 onClick={() => setActiveTab('exams')}
-                className="w-full py-2 bg-[#0b2545] hover:bg-blue-900 text-white font-bold rounded-lg transition-colors cursor-pointer text-center"
+                className="w-full py-2.5 bg-[#0068b5] hover:bg-[#004b87] text-white font-bold rounded-xl transition-colors cursor-pointer text-center"
               >
                 Inspect Official Hall Slip
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
@@ -794,95 +910,109 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {activeTab === 'courses' && (
         <div className="space-y-4">
           {/* Course Banner (Top Header of Course Workspace) */}
-          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-            <div className="p-6 bg-gradient-to-r from-[#0b2545] via-[#133e87] to-[#0b2545] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white border border-[#d8dadb] rounded-2xl overflow-hidden shadow-2xs">
+            <div className="p-4 sm:p-6 bg-gradient-to-r from-[#004b87] via-[#005a9e] to-[#0068b5] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-slate-950 bg-amber-400 px-2 py-0.5 rounded">
+                  <span className="font-mono text-xs font-bold text-white bg-[#84a433] px-2.5 py-0.5 rounded-md">
                     {selectedCourse.code}
                   </span>
-                  <span className="text-xs text-slate-200">
+                  <span className="text-xs text-slate-100">
                     Semester 7 Core · {selectedCourse.creditHours} Credit Hours
                   </span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h2 className="text-lg sm:text-2xl font-bold text-white tracking-tight">
                   {selectedCourse.title}
                 </h2>
-                <div className="text-xs text-slate-300 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <div className="text-xs text-slate-200 flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span>Instructor: <strong className="text-white">{selectedCourse.instructor}</strong></span>
-                  <span className="text-slate-400" aria-hidden="true">·</span>
+                  <span className="text-white/40" aria-hidden="true">·</span>
                   <span>{selectedCourse.schedule}</span>
-                  <span className="text-slate-400" aria-hidden="true">·</span>
+                  <span className="text-white/40" aria-hidden="true">·</span>
                   <span>{selectedCourse.classroom}</span>
                 </div>
               </div>
 
               {/* Quick Instructor Actions */}
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <button
                   onClick={() => setShowOfficeHoursModal(true)}
-                  className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="min-h-[38px] px-3 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Mail className="w-3.5 h-3.5" />
-                  <span>Book Office Hours</span>
+                  <span>Office Hours</span>
                 </button>
                 <button
-                  onClick={() => alert(`Full syllabus and lecture pack for ${selectedCourse.code} downloaded (.ZIP).`)}
-                  className="px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                  onClick={() => triggerToast(`Full syllabus & lecture pack for ${selectedCourse.code} downloaded (.ZIP).`)}
+                  className="min-h-[38px] px-3.5 py-2 bg-[#84a433] hover:bg-[#739129] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>Download Course Pack</span>
+                  <span>Course Pack</span>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Sakai-Style Two-Pane Architecture (Left Tool Menu + Right Content) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            {/* Left Course Tool Navigation Palette (Sakai Standard) */}
-            <aside className="lg:col-span-3 bg-white border border-slate-200 rounded-xl p-2.5 space-y-1 h-fit shadow-2xs">
-              <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
-                Course Tools (Sakai)
+          {/* Two-Pane Architecture: Horizontal Swipeable Pill Bar on Mobile + Left Sidebar on Desktop */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+            {/* Course Tool Navigation Palette */}
+            <aside
+              onTouchStart={courseToolSwipe.onTouchStart}
+              onTouchEnd={courseToolSwipe.onTouchEnd}
+              className="lg:col-span-3 bg-white border border-[#d8dadb] rounded-2xl p-2 lg:p-2.5 lg:space-y-1 h-fit shadow-2xs select-none"
+            >
+              <div className="hidden lg:block px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+                Course Tools
               </div>
 
-              {[
-                { id: 'modules', label: 'Lessons & Modules (1–16)', icon: <BookOpen className="w-4 h-4" /> },
-                { id: 'syllabus', label: 'Syllabus & Outcomes', icon: <FileText className="w-4 h-4" /> },
-                { id: 'assignments', label: 'Assignments & Submissions', icon: <CheckSquare className="w-4 h-4" />, count: selectedCourse.assignmentsCount },
-                { id: 'gradebook', label: 'Gradebook & OBE CLOs', icon: <FileSpreadsheet className="w-4 h-4" /> },
-                { id: 'attendance', label: 'Course Attendance Log', icon: <Clock className="w-4 h-4" /> },
-                { id: 'resources', label: 'Resources & Downloads', icon: <FolderOpen className="w-4 h-4" />, count: selectedCourse.materialsCount },
-                { id: 'roster', label: 'Class Roster & Discussion', icon: <Users className="w-4 h-4" /> }
-              ].map(tool => {
-                const isCurrent = courseTool === tool.id;
-                return (
-                  <button
-                    key={tool.id}
-                    onClick={() => setCourseTool(tool.id as any)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                      isCurrent
-                        ? 'bg-[#0b2545] text-white shadow-2xs font-bold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      {tool.icon}
-                      <span>{tool.label}</span>
-                    </div>
-                    {tool.count !== undefined && (
-                      <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                        isCurrent ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
-                      }`}>
-                        {tool.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+              <div
+                ref={courseToolScrollRef}
+                className="flex lg:flex-col items-center lg:items-stretch gap-1.5 lg:gap-1 overflow-x-auto no-scrollbar"
+              >
+                {[
+                  { id: 'modules', label: 'Lessons (1–16)', icon: <BookOpen className="w-4 h-4 shrink-0" /> },
+                  { id: 'syllabus', label: 'Syllabus & OBE', icon: <FileText className="w-4 h-4 shrink-0" /> },
+                  { id: 'assignments', label: 'Assignments', icon: <CheckSquare className="w-4 h-4 shrink-0" />, count: selectedCourse.assignmentsCount },
+                  { id: 'gradebook', label: 'Gradebook', icon: <FileSpreadsheet className="w-4 h-4 shrink-0" /> },
+                  { id: 'attendance', label: 'Attendance', icon: <Clock className="w-4 h-4 shrink-0" /> },
+                  { id: 'resources', label: 'Resources', icon: <FolderOpen className="w-4 h-4 shrink-0" />, count: selectedCourse.materialsCount },
+                  { id: 'roster', label: 'Class Roster', icon: <Users className="w-4 h-4 shrink-0" /> }
+                ].map(tool => {
+                  const isCurrent = courseTool === tool.id;
+                  return (
+                    <button
+                      key={tool.id}
+                      data-nav-id={tool.id}
+                      onClick={() => setCourseTool(tool.id as any)}
+                      className={`min-h-[38px] lg:w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+                        isCurrent
+                          ? 'bg-[#0068b5] text-white shadow-2xs font-bold'
+                          : 'bg-[#f4f6f8] lg:bg-transparent text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {tool.icon}
+                        <span>{tool.label}</span>
+                      </div>
+                      {tool.count !== undefined && (
+                        <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
+                          isCurrent ? 'bg-white/20 text-white' : 'bg-white lg:bg-slate-100 text-slate-600'
+                        }`}>
+                          {tool.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </aside>
 
-            {/* Right Main Tool Viewport */}
-            <main className="lg:col-span-9 bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-2xs min-h-[500px]">
+            {/* Right Main Tool Viewport (Supports Swipe Left/Right Between Course Tools) */}
+            <main
+              onTouchStart={courseToolSwipe.onTouchStart}
+              onTouchEnd={courseToolSwipe.onTouchEnd}
+              className="lg:col-span-9 bg-white border border-[#d8dadb] rounded-2xl p-4 sm:p-6 space-y-5 shadow-2xs min-h-[420px]"
+            >
               {/* TOOL: LESSONS & MODULES */}
               {courseTool === 'modules' && (
                 <div className="space-y-5">
@@ -1126,7 +1256,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                           </div>
                         </div>
                         <button
-                          onClick={() => alert(`Downloading ${file.name}`)}
+                          onClick={() => triggerToast(`Downloaded ${file.name} from LMS Vault.`)}
                           className="px-2.5 py-1 text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded font-bold cursor-pointer flex items-center gap-1"
                         >
                           <Download className="w-3.5 h-3.5" />
@@ -1737,7 +1867,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       </button>
                     ) : (
                       <button
-                        onClick={() => alert(`Official Paid Receipt downloaded for ${challan.challanNumber}`)}
+                        onClick={() => triggerToast(`Official Paid Receipt downloaded for ${challan.challanNumber}.`)}
                         className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Download className="w-3.5 h-3.5" />
@@ -1797,7 +1927,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </div>
                 </div>
                 <button
-                  onClick={() => alert('Official Subject Selection Form PDF Downloaded.')}
+                  onClick={() => triggerToast('Official Subject Selection Form PDF Downloaded.')}
                   className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -1965,9 +2095,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     { key: 'fairness', question: '5. Quizzes, assignments, and continuous assessments were evaluated fairly with constructive feedback.' },
                     { key: 'interaction', question: '6. The teacher was accessible during designated faculty office hours for academic consultation.' }
                   ].map(q => (
-                    <div key={q.key} className="p-4 rounded-xl border border-slate-100 hover:border-slate-200 bg-white transition-colors space-y-2">
-                      <p className="text-xs font-semibold text-slate-800">{q.question}</p>
-                      <div className="flex items-center gap-2">
+                    <div key={q.key} className="p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-white transition-colors space-y-2.5">
+                      <p className="text-xs font-semibold text-slate-800 leading-relaxed">{q.question}</p>
+                      <div className="grid grid-cols-5 sm:flex sm:items-center gap-1.5 sm:gap-2">
                         {[1, 2, 3, 4, 5].map(score => {
                           const isSelected = qecRatings[q.key] === score;
                           return (
@@ -1975,13 +2105,14 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                               key={score}
                               type="button"
                               onClick={() => setQecRatings(prev => ({ ...prev, [q.key]: score }))}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                              className={`min-h-[38px] px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                                 isSelected
-                                  ? 'bg-[#0b2545] text-white shadow-xs'
+                                  ? 'bg-[#0068b5] text-white shadow-xs'
                                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                               }`}
                             >
-                              {score} {score === 5 ? '★ (Strongly Agree)' : score === 1 ? '★ (Poor)' : '★'}
+                              <span>{score} ★</span>
+                              <span className="hidden sm:inline">{score === 5 ? ' (Strongly Agree)' : score === 1 ? ' (Poor)' : ''}</span>
                             </button>
                           );
                         })}
@@ -2207,10 +2338,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </button>
               <button
                 onClick={() => {
-                  alert(`Appointment request sent to ${selectedCourse.instructor}. You will receive an Outlook calendar invite.`);
+                  triggerToast(`Consultation request sent to ${selectedCourse.instructor}.`);
                   setShowOfficeHoursModal(false);
                 }}
-                className="px-3.5 py-1.5 bg-[#0b2545] text-white text-xs font-bold rounded"
+                className="px-3.5 py-1.5 bg-[#0068b5] hover:bg-[#004b87] text-white text-xs font-bold rounded-lg cursor-pointer"
               >
                 Confirm Booking
               </button>

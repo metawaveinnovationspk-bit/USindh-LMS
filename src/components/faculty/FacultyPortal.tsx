@@ -106,29 +106,31 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
       {/* Faculty Instructor Header */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden">
-        <div className="bg-[#1b4332] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#143326]">
-          <div className="flex items-center gap-3.5">
-            <UniversitySeal size="sm" monochrome={false} />
+      <div className="bg-white border border-[#d8dadb] rounded-2xl shadow-2xs overflow-hidden">
+        <div className="bg-[#004b87] text-white px-4 sm:px-6 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#003865]">
+          <div className="flex items-center gap-3">
+            <div className="p-1 bg-white rounded-xl border border-[#d8dadb] shrink-0">
+              <UniversitySeal size="sm" monochrome={false} />
+            </div>
             <div>
-              <div className="text-[11px] font-semibold tracking-wider text-emerald-300 uppercase font-mono">
-                Academic Faculty & Teaching Workspace
+              <div className="text-[10px] sm:text-[11px] font-semibold tracking-wider text-[#c8e27b] uppercase font-mono">
+                Teacher E-Portal &amp; Academic Workspace
               </div>
-              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h1 className="text-sm sm:text-lg font-bold text-white tracking-tight">
                 {currentTeacher.departmentName}
               </h1>
             </div>
           </div>
 
           {/* Teacher Selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-emerald-200 hidden sm:inline">Active Instructor:</span>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <span className="text-xs text-[#c8e27b] hidden sm:inline">Instructor:</span>
             <select
               value={selectedTeacherId}
               onChange={(e) => setSelectedTeacherId(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer focus:outline-hidden"
+              className="w-full sm:w-auto min-h-[36px] px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer focus:outline-hidden"
             >
               {UNIVERSITY_TEACHERS.map(tch => (
                 <option key={tch.id} value={tch.id} className="text-slate-900 bg-white">
@@ -140,45 +142,43 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
         </div>
 
         {/* Teacher Details & Course Selector */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
-          <div className="lg:col-span-5 flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#1b4332] text-emerald-300 flex items-center justify-center font-serif text-lg font-bold border border-slate-300/60 shadow-xs shrink-0">
+        <div className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center bg-gradient-to-b from-slate-50/50 to-white">
+          <div className="lg:col-span-5 flex items-center gap-3.5">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#0068b5] text-white flex items-center justify-center font-mono text-base sm:text-lg font-bold border border-[#d8dadb] shadow-xs shrink-0">
               FAC
             </div>
-            <div className="space-y-1">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+            <div className="space-y-0.5 min-w-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-[#0068b5] uppercase tracking-wider font-mono">
                 {currentTeacher.designation}
               </div>
-              <h2 className="text-lg font-bold text-slate-900 leading-snug">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-snug truncate">
                 {currentTeacher.name}
               </h2>
-              <div className="text-xs text-slate-600 font-mono">
+              <div className="text-[11px] sm:text-xs text-slate-600 font-mono truncate">
                 {currentTeacher.email} • {currentTeacher.officeRoom}
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-7 flex flex-wrap items-center justify-end gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-600">Assigned Course:</span>
-              <div className="flex gap-1.5">
-                {currentTeacher.activeCourses.map((c, idx) => {
-                  const code = c.split(' ')[0];
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedCourse(code)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-colors cursor-pointer ${
-                        selectedCourse === code
-                          ? 'bg-[#1b4332] text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                      }`}
-                    >
-                      {code}
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="lg:col-span-7 flex flex-wrap items-center lg:justify-end gap-2">
+            <span className="text-xs font-semibold text-slate-600">Course Roster:</span>
+            <div className="flex flex-wrap gap-1.5">
+              {currentTeacher.activeCourses.map((c, idx) => {
+                const code = c.split(' ')[0];
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedCourse(code)}
+                    className={`min-h-[36px] px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-colors cursor-pointer ${
+                      selectedCourse === code
+                        ? 'bg-[#0068b5] text-white shadow-xs'
+                        : 'bg-[#f4f6f8] text-slate-700 hover:bg-slate-200 border border-[#d8dadb]'
+                    }`}
+                  >
+                    {code}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -318,72 +318,78 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
           TAB 1: LECTURE ATTENDANCE ROSTER
          ========================================================= */}
       {activeTab === 'attendance' && (
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div className="bg-white border border-[#d8dadb] rounded-2xl p-4 sm:p-6 shadow-2xs space-y-4 sm:space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
                 Course: {selectedCourse} • Daily Lecture Attendance
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Click any status chip to toggle between Present, Absent, and Late.
+                Tap Present, Absent, or Late for any scholar, then lock the roster.
               </p>
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={handleMarkAllPresent}
-                className="py-1.5 px-3 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+                className="min-h-[38px] py-1.5 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
               >
                 Mark All Present
               </button>
               <button
                 onClick={handleSubmitAttendance}
-                className="py-1.5 px-4 rounded-lg bg-[#1b4332] hover:bg-[#2d6a4f] text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                className="min-h-[38px] py-1.5 px-4 rounded-xl bg-[#84a433] hover:bg-[#739129] text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Save className="w-3.5 h-3.5" />
-                <span>Submit & Lock Roster</span>
+                <span>Lock Roster</span>
               </button>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 font-mono text-[11px] text-slate-600 uppercase">
-                <tr>
-                  <th className="py-2.5 px-3">Roll Number</th>
-                  <th className="py-2.5 px-3">Student Name</th>
-                  <th className="py-2.5 px-3">Current Status</th>
-                  <th className="py-2.5 px-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {roster.map((s) => (
-                  <tr key={s.roll} className="hover:bg-slate-50/70">
-                    <td className="py-2.5 px-3 font-mono font-bold text-slate-900">{s.roll}</td>
-                    <td className="py-2.5 px-3 font-semibold text-slate-800">{s.name}</td>
-                    <td className="py-2.5 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                        s.status === 'Present'
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : s.status === 'Absent'
-                          ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                          : 'bg-amber-50 text-amber-800 border border-amber-200'
-                      }`}>
-                        {s.status}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 text-right">
+          <div className="divide-y divide-slate-100">
+            {roster.map((s) => (
+              <div key={s.roll} className="py-3 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 hover:bg-slate-50/70 rounded-xl">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="font-mono text-xs font-bold text-[#004b87] bg-[#f4f6f8] px-2.5 py-1 rounded-lg border border-[#d8dadb] shrink-0">
+                    {s.roll}
+                  </span>
+                  <span className="font-bold text-xs sm:text-sm text-slate-900 truncate">
+                    {s.name}
+                  </span>
+                </div>
+
+                {/* 1-Tap Touch Status Buttons for Mobile & Desktop */}
+                <div className="grid grid-cols-3 sm:flex items-center gap-1.5 shrink-0">
+                  {(['Present', 'Absent', 'Late'] as const).map((statusOption) => {
+                    const isSelected = s.status === statusOption;
+                    return (
                       <button
-                        onClick={() => toggleStudentStatus(s.roll)}
-                        className="text-[11px] font-semibold text-blue-900 hover:underline cursor-pointer"
+                        key={statusOption}
+                        type="button"
+                        onClick={() =>
+                          setRoster(prev =>
+                            prev.map(item =>
+                              item.roll === s.roll ? { ...item, status: statusOption } : item
+                            )
+                          )
+                        }
+                        className={`min-h-[34px] px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          isSelected
+                            ? statusOption === 'Present'
+                              ? 'bg-[#007a33] text-white shadow-2xs'
+                              : statusOption === 'Absent'
+                              ? 'bg-rose-600 text-white shadow-2xs'
+                              : 'bg-amber-500 text-white shadow-2xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
                       >
-                        Toggle Status
+                        {statusOption}
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

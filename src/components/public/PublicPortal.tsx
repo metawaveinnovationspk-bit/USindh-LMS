@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserRole } from '../../types';
 import { UniversitySeal } from '../common/UniversitySeal';
+import { useSwipeNavigation, useAutoScrollActivePill } from '../../hooks/useSwipeNavigation';
 import statueHeroAsset from '../../assets/images/usindh_statue_hero_1791544134127.jpg';
 import campusHeroAsset from '../../assets/images/hero_sindh_university_campus_1791409760731.jpg';
 import labShowcaseAsset from '../../assets/images/software_engineering_lab_showcase_1791409773868.jpg';
@@ -68,6 +69,15 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
   const [programSearchQuery, setProgramSearchQuery] = useState<string>('');
   const [selectedProgramDetail, setSelectedProgramDetail] = useState<AcademicProgram | null>(null);
 
+  const programsTabSwipe = useSwipeNavigation<'undergraduate' | 'postgraduate' | 'admissions'>({
+    items: ['undergraduate', 'postgraduate', 'admissions'],
+    activeItem: programsActiveTab,
+    onSelect: setProgramsActiveTab,
+    minSwipeDistance: 40,
+    ignoreScrollableChildren: true
+  });
+  const programsTabScrollRef = useAutoScrollActivePill(programsActiveTab);
+
   // Admissions Merit Calculator State (Formula: 10% SSC + 30% HSC + 60% SUTC Entry Test)
   const [calcSscPercent, setCalcSscPercent] = useState<number>(75);
   const [calcHscPercent, setCalcHscPercent] = useState<number>(72);
@@ -76,6 +86,13 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
 
   // Circulars Category Filter
   const [circularCategory, setCircularCategory] = useState<'All' | 'Examinations' | 'Admissions' | 'Faculty' | 'Syndicate'>('All');
+  const circularSwipe = useSwipeNavigation<'All' | 'Examinations' | 'Admissions' | 'Faculty' | 'Syndicate'>({
+    items: ['All', 'Examinations', 'Admissions', 'Faculty', 'Syndicate'],
+    activeItem: circularCategory,
+    onSelect: setCircularCategory,
+    minSwipeDistance: 35
+  });
+  const circularScrollRef = useAutoScrollActivePill(circularCategory);
 
   // Image assets (ES module bundled for Vercel/Vite production)
   const campusHeroImg = campusHeroAsset;
@@ -250,164 +267,163 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
   ];
 
   return (
-    <div className="space-y-12 sm:space-y-16 pb-20">
+    <div className="space-y-8 sm:space-y-14 pb-12">
       {/* =========================================================
           1. HERO SECTION: ACADEMIC INSTITUTION & CENTRAL LMS
-             Dignified University of Sindh Allama II Qazi Campus layout
-             Maintained by FET, UOS · Official Emblem Color Theme
+             Mobile-First + Full Desktop Presence · Official Emblem Theme
          ========================================================= */}
-      <section className="relative bg-gradient-to-b from-[#021d36] via-[#003b6d] to-[#005296] text-white pt-6 pb-14 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b-4 border-[#84a433] overflow-hidden">
+      <section className="relative bg-gradient-to-b from-[#021d36] via-[#003b6d] to-[#005296] text-white pt-4 sm:pt-6 pb-8 sm:pb-14 px-3.5 sm:px-6 lg:px-8 border-b-4 border-[#84a433] overflow-hidden">
         {/* Subtle Ambient Academic Grid Background */}
         <div className="absolute inset-0 bg-[radial-gradient(#d8dadb_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.05] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-5 sm:space-y-8 relative z-10">
           {/* Institutional Top Motto Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-3 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-2.5 text-xs">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="font-serif-academic text-[#c8e27b] font-bold tracking-wider text-sm">
+              <span className="font-serif-academic text-[#c8e27b] font-bold tracking-wider text-xs sm:text-sm">
                 اُطْلُبُوا الْعِلْمَ مِنَ الْمَهْدِ إِلَى اللَّحْدِ
               </span>
-              <span className="text-white/25">·</span>
-              <span className="font-mono text-[#d8dadb] font-semibold tracking-wider uppercase text-[11px]">
-                Founded 1947 · Allama II Qazi Campus, Jamshoro
-              </span>
               <span className="text-white/25 hidden sm:inline">·</span>
-              <span className="text-slate-200 hidden sm:inline font-mono text-[11px]">
-                HEC W4 Highest Category
+              <span className="font-mono text-[#d8dadb] font-semibold tracking-wider uppercase text-[10px] sm:text-[11px]">
+                Est. 1947 · Jamshoro
               </span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-md bg-[#007a33]/30 text-[#c8e27b] border border-[#84a433]/50 text-[11px] font-mono font-semibold flex items-center gap-1.5 shadow-xs">
-                <span>Academic Session Fall 2026 Active</span>
+              <span className="px-2 py-0.5 rounded-md bg-[#007a33]/40 text-[#c8e27b] border border-[#84a433]/50 text-[10px] sm:text-[11px] font-mono font-semibold">
+                Fall 2026 Active
               </span>
             </div>
           </div>
 
           {/* Hero Main Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
             {/* Left 7 Columns: University Overview & Key Action Gateways */}
-            <div className="lg:col-span-7 space-y-5">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-5">
               {/* Brand Header with Unclipped Official University of Sindh Emblem */}
-              <div className="flex items-start gap-4 sm:gap-5">
-                <div className="shrink-0 p-2 bg-white rounded-2xl border-2 border-[#d8dadb] shadow-lg">
-                  <UniversitySeal size="xl" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-[11px] uppercase font-mono font-bold tracking-widest text-[#c8e27b]">
-                    GOVERNMENT OF SINDH · ESTABLISHED 1947
+              <div className="flex items-center sm:items-start gap-3.5 sm:gap-5">
+                <div className="shrink-0 p-1.5 sm:p-2 bg-white rounded-2xl border-2 border-[#d8dadb] shadow-lg">
+                  <div className="sm:hidden">
+                    <UniversitySeal size="lg" />
                   </div>
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none font-sans">
+                  <div className="hidden sm:block">
+                    <UniversitySeal size="xl" />
+                  </div>
+                </div>
+                <div className="space-y-0.5 sm:space-y-1 min-w-0">
+                  <div className="text-[10px] sm:text-[11px] uppercase font-mono font-bold tracking-widest text-[#c8e27b]">
+                    GOVERNMENT OF SINDH · ESTD. 1947
+                  </div>
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none font-sans">
                     University of Sindh
                   </h1>
-                  <h2 className="text-lg sm:text-xl font-bold text-[#c8e27b] tracking-normal mt-1">
+                  <h2 className="text-sm sm:text-xl font-bold text-[#c8e27b] tracking-normal mt-0.5">
                     Allama II Qazi Campus, Jamshoro
                   </h2>
-                  <p className="text-xs sm:text-sm font-semibold text-[#e5e8ea] mt-0.5">
-                    Central Learning Management System (LMS) &amp; Academic E-Portal
+                  <p className="text-[11px] sm:text-sm font-semibold text-[#e5e8ea] mt-0.5">
+                    Central Learning Management System (LMS) &amp; E-Portal
                   </p>
-                  
-                  {/* FET, UOS Maintenance Line */}
-                  <div className="pt-1">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#021d36]/80 border border-[#d8dadb]/30 text-[10px] text-[#d8dadb] font-mono shadow-xs">
-                      <ShieldCheck className="w-3 h-3 text-[#c8e27b]" />
-                      <span>Maintained by FET, UOS (Faculty of Engineering &amp; Technology) · Central ITSC</span>
-                    </span>
-                  </div>
                 </div>
               </div>
 
-              {/* Dignified Narrative */}
-              <p className="text-xs sm:text-sm text-slate-100 leading-relaxed max-w-2xl font-normal">
-                Serving over <strong>42,850 enrolled scholars</strong> and <strong>1,240 faculty members</strong> across <strong>14 Faculties and 68 Teaching Departments</strong>. This central academic platform coordinates digital course materials, biometric attendance compliance (75% rule), encrypted examination QR admit slips, and student life services.
-              </p>
-
-              {/* Leadership & Institutional Attributes */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 py-2.5 border-y border-white/15 text-xs">
-                <div className="p-2.5 rounded-xl bg-white/10 border border-white/15">
-                  <span className="text-[#d8dadb] block text-[10px] uppercase font-mono">Chancellor</span>
-                  <strong className="text-white text-xs truncate block">Kamran Khan Tessori</strong>
-                  <span className="text-[10px] text-slate-300">Governor of Sindh</span>
-                </div>
-                <div className="p-2.5 rounded-xl bg-white/10 border border-white/15">
-                  <span className="text-[#d8dadb] block text-[10px] uppercase font-mono">Vice-Chancellor</span>
-                  <strong className="text-[#c8e27b] text-xs truncate block">Prof. Dr. M. Siddique Kalhoro</strong>
-                  <span className="text-[10px] text-slate-300">Senior Academician</span>
-                </div>
-                <div className="p-2.5 rounded-xl bg-white/10 border border-white/15 col-span-2 sm:col-span-1">
-                  <span className="text-[#d8dadb] block text-[10px] uppercase font-mono">HEC Category</span>
-                  <strong className="text-[#c8e27b] text-xs font-mono block">Highest W4 Category</strong>
-                  <span className="text-[10px] text-slate-300">NCEAC W4 Accredited</span>
-                </div>
-              </div>
-
-              {/* The 3 Core Required Action Buttons (LMS Login, Student Login, & Admissions) */}
-              <div className="pt-2 space-y-3">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[#c8e27b] font-mono">
-                  Primary Academic Gateways:
+              {/* Primary Academic Gateways — Placed high on mobile for instant 1-thumb action */}
+              <div className="pt-1 space-y-2">
+                <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#c8e27b] font-mono">
+                  1-Tap Portal Access:
                 </div>
                 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
                   {/* 1. Student Login (Official Sindh Map Olive-Green Primary CTA) */}
                   <button
                     onClick={() => onSelectRole('student')}
-                    className="px-5 py-3 rounded-xl bg-[#84a433] hover:bg-[#739129] text-white font-extrabold text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2.5 cursor-pointer ring-2 ring-[#c8e27b]/40"
+                    className="min-h-[52px] px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-[#84a433] hover:bg-[#739129] active:scale-[0.99] text-white font-extrabold text-xs sm:text-sm transition-all shadow-md flex items-center justify-between sm:justify-start gap-2 cursor-pointer ring-2 ring-[#c8e27b]/40"
                   >
-                    <GraduationCap className="w-5 h-5 text-white shrink-0" />
-                    <div className="text-left">
-                      <div className="leading-tight">Student Login</div>
-                      <div className="text-[9px] font-mono text-[#eef4e3] font-semibold">Daily LMS Workspace</div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <GraduationCap className="w-5 h-5 text-white shrink-0" />
+                      <div className="text-left min-w-0">
+                        <div className="leading-tight truncate">Student LMS</div>
+                        <div className="text-[9px] font-mono text-[#eef4e3] font-semibold truncate">Courses &amp; Slip</div>
+                      </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 ml-1" />
+                    <ArrowRight className="w-4 h-4 shrink-0" />
                   </button>
 
                   {/* 2. LMS Login (Official Silver & White Gateway) */}
                   <button
                     onClick={() => onSelectRole('faculty')}
-                    className="px-5 py-3 rounded-xl bg-white hover:bg-[#e8ecef] text-[#004b87] font-bold text-xs sm:text-sm transition-all shadow-md flex items-center gap-2.5 cursor-pointer border border-[#d8dadb]"
+                    className="min-h-[52px] px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-[#e8ecef] active:scale-[0.99] text-[#004b87] font-bold text-xs sm:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer border border-[#d8dadb]"
                   >
                     <Building2 className="w-5 h-5 text-[#0068b5] shrink-0" />
-                    <div className="text-left">
-                      <div className="leading-tight">LMS Login</div>
-                      <div className="text-[9px] font-mono text-slate-600 font-semibold">Faculty &amp; Staff E-Portal</div>
+                    <div className="text-left min-w-0">
+                      <div className="leading-tight truncate">Teacher Portal</div>
+                      <div className="text-[9px] font-mono text-slate-600 font-semibold truncate">Roster &amp; Marks</div>
                     </div>
                   </button>
 
-                  {/* 3. Admissions Portal (Official Sindh Cerulean Blue & Terracotta Accent) */}
+                  {/* 3. Admissions Portal */}
                   <button
                     onClick={() => {
                       setProgramsActiveTab('admissions');
                       document.getElementById('degree-programs-admissions')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="px-5 py-3 rounded-xl bg-[#0068b5] hover:bg-[#00599c] text-white font-bold text-xs sm:text-sm transition-all shadow-md border border-[#d8dadb]/40 flex items-center gap-2.5 cursor-pointer"
+                    className="min-h-[52px] px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-[#0068b5] hover:bg-[#00599c] active:scale-[0.99] text-white font-bold text-xs sm:text-sm transition-all shadow-md border border-[#d8dadb]/40 flex items-center gap-2 cursor-pointer"
                   >
                     <CheckCircle2 className="w-5 h-5 text-[#c8e27b] shrink-0" />
-                    <div className="text-left">
-                      <div className="leading-tight">Admissions 2026–27</div>
-                      <div className="text-[9px] font-mono text-sky-100 font-semibold">SUTC Pre-Entry Test</div>
+                    <div className="text-left min-w-0">
+                      <div className="leading-tight truncate">Admissions 26</div>
+                      <div className="text-[9px] font-mono text-sky-100 font-semibold truncate">Merit &amp; Apply</div>
                     </div>
                   </button>
 
-                  {/* Secondary Quick Access: Parents Portal */}
+                  {/* 4. Parents Portal */}
                   <button
                     onClick={() => onSelectRole('parent')}
-                    className="px-3.5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-all border border-white/25 backdrop-blur-xs flex items-center gap-2 cursor-pointer"
+                    className="min-h-[52px] px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/15 active:scale-[0.99] text-white font-semibold text-xs transition-all border border-white/25 backdrop-blur-xs flex items-center gap-2 cursor-pointer"
                     title="Guardian access for student attendance and GPA verification"
                   >
-                    <HeartHandshake className="w-4 h-4 text-[#c8e27b]" />
-                    <span>Parent Portal</span>
+                    <HeartHandshake className="w-5 h-5 text-[#c8e27b] shrink-0" />
+                    <div className="text-left min-w-0">
+                      <div className="leading-tight truncate">Parent Portal</div>
+                      <div className="text-[9px] font-mono text-slate-300 font-normal truncate">Ward Status</div>
+                    </div>
                   </button>
+                </div>
+              </div>
+
+              {/* Dignified Narrative */}
+              <p className="text-xs sm:text-sm text-slate-100 leading-relaxed max-w-2xl font-normal">
+                Serving over <strong>42,850 enrolled scholars</strong> and <strong>1,240 faculty members</strong> across <strong>14 Faculties and 68 Teaching Departments</strong>. Unified platform for course modules, 75% attendance compliance, QR examination slips, and 1Link fee verification.
+              </p>
+
+              {/* Leadership & Institutional Attributes */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 py-2 border-y border-white/15 text-xs">
+                <div className="p-2 rounded-xl bg-white/10 border border-white/15">
+                  <span className="text-[#d8dadb] block text-[9px] sm:text-[10px] uppercase font-mono">Chancellor</span>
+                  <strong className="text-white text-[11px] sm:text-xs truncate block">Kamran Khan Tessori</strong>
+                  <span className="text-[9px] sm:text-[10px] text-slate-300">Governor of Sindh</span>
+                </div>
+                <div className="p-2 rounded-xl bg-white/10 border border-white/15">
+                  <span className="text-[#d8dadb] block text-[9px] sm:text-[10px] uppercase font-mono">Vice-Chancellor</span>
+                  <strong className="text-[#c8e27b] text-[11px] sm:text-xs truncate block">Prof. Dr. M. Siddique Kalhoro</strong>
+                  <span className="text-[9px] sm:text-[10px] text-slate-300">University of Sindh</span>
+                </div>
+                <div className="p-2 rounded-xl bg-white/10 border border-white/15 col-span-2 sm:col-span-1 flex sm:block items-center justify-between">
+                  <div>
+                    <span className="text-[#d8dadb] block text-[9px] sm:text-[10px] uppercase font-mono">HEC Ranking</span>
+                    <strong className="text-[#c8e27b] text-[11px] sm:text-xs font-mono block">Highest W4 Category</strong>
+                  </div>
+                  <span className="text-[9px] sm:text-[10px] text-slate-300">FET, UOS · ITSC</span>
                 </div>
               </div>
             </div>
 
             {/* Right 5 Columns: Landmark Statue of Wisdom Showcase */}
-            <div className="lg:col-span-5 space-y-3">
-              <div className="relative rounded-3xl overflow-hidden border-2 border-[#d8dadb]/60 shadow-2xl group bg-[#021d36]">
+            <div className="lg:col-span-5 space-y-2.5">
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-[#d8dadb]/60 shadow-2xl group bg-[#021d36]">
                 <img
                   src={statueHeroAsset}
                   alt="University of Sindh iconic Statue of Wisdom in front of Allama I.I. Kazi Library"
-                  className="w-full h-72 sm:h-80 object-cover group-hover:scale-103 transition-transform duration-700"
+                  className="w-full h-56 sm:h-76 object-cover group-hover:scale-103 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
                 
@@ -415,33 +431,33 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#021d36] via-black/30 to-transparent pointer-events-none" />
 
                 {/* Top Corner Plaque */}
-                <div className="absolute top-3 left-3 bg-[#004b87]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#d8dadb]/40 text-white flex items-center gap-2 shadow-md">
-                  <span className="text-[11px] font-mono font-bold text-[#c8e27b] uppercase tracking-wider">
+                <div className="absolute top-2.5 left-2.5 bg-[#004b87]/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#d8dadb]/40 text-white flex items-center gap-1.5 shadow-md">
+                  <span className="text-[10px] sm:text-[11px] font-mono font-bold text-[#c8e27b] uppercase tracking-wider">
                     Statue of Wisdom · Jamshoro
                   </span>
                 </div>
 
                 {/* Overlaid Active Gazette Notice */}
-                <div className="absolute bottom-3 left-3 right-3 p-3.5 rounded-2xl bg-[#021d36]/95 backdrop-blur-md border border-[#d8dadb]/30 text-white space-y-1.5 shadow-xl">
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 p-3 rounded-2xl bg-[#021d36]/95 backdrop-blur-md border border-[#d8dadb]/30 text-white space-y-1 shadow-xl">
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold text-[#c8e27b] uppercase tracking-wider flex items-center gap-1.5 font-mono">
-                      <BellRing className="w-3.5 h-3.5 text-[#c8e27b]" />
-                      <span>Gazette Notification · Fall 2026</span>
+                    <span className="font-bold text-[#c8e27b] uppercase tracking-wider flex items-center gap-1 font-mono">
+                      <BellRing className="w-3 h-3 text-[#c8e27b]" />
+                      <span>Gazette · Fall 2026</span>
                     </span>
-                    <span className="font-mono text-[#d8dadb] text-[10px]">Reference: UOS/EXM-104</span>
+                    <span className="font-mono text-[#d8dadb] text-[9px] sm:text-[10px]">UOS/EXM-104</span>
                   </div>
                   
                   <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
                     Fall 2026 Examination Schedule &amp; QR Hall Passes Active
                   </h3>
                   
-                  <div className="flex items-center justify-between text-[11px] text-slate-300 pt-1.5 border-t border-white/15">
-                    <span className="text-[10px] text-[#d8dadb] font-mono">Allama II Qazi Central Campus</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-300 pt-1 border-t border-white/15">
+                    <span className="text-[10px] text-[#d8dadb] font-mono">Allama II Qazi Campus</span>
                     <button
                       onClick={() => onSelectRole('student')}
                       className="text-[#c8e27b] hover:text-white font-bold flex items-center gap-1 cursor-pointer text-xs"
                     >
-                      <span>Access Student Slip</span>
+                      <span>Open QR Slip</span>
                       <ArrowRight className="w-3 h-3" />
                     </button>
                   </div>
@@ -449,21 +465,55 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
               </div>
 
               {/* 3 Quick Metric Counters */}
-              <div className="grid grid-cols-3 gap-2.5 text-center">
-                <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:border-[#84a433] transition-colors">
-                  <div className="font-mono text-base sm:text-lg font-black text-[#c8e27b] tabular-nums">42,850+</div>
-                  <div className="text-[10px] text-slate-200 font-medium">Scholars Enrolled</div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/10 border border-white/15">
+                  <div className="font-mono text-sm sm:text-lg font-black text-[#c8e27b] tabular-nums">42,850+</div>
+                  <div className="text-[10px] text-slate-200 font-medium">Scholars</div>
                 </div>
-                <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:border-[#84a433] transition-colors">
-                  <div className="font-mono text-base sm:text-lg font-black text-[#c8e27b] tabular-nums">1,240+</div>
-                  <div className="text-[10px] text-slate-200 font-medium">Teaching Faculty</div>
+                <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/10 border border-white/15">
+                  <div className="font-mono text-sm sm:text-lg font-black text-[#c8e27b] tabular-nums">1,240+</div>
+                  <div className="text-[10px] text-slate-200 font-medium">Faculty</div>
                 </div>
-                <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:border-[#84a433] transition-colors">
-                  <div className="font-mono text-base sm:text-lg font-black text-[#c8e27b] tabular-nums">68</div>
+                <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/10 border border-white/15">
+                  <div className="font-mono text-sm sm:text-lg font-black text-[#c8e27b] tabular-nums">68</div>
                   <div className="text-[10px] text-slate-200 font-medium">Departments</div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          QUICK ROLE SWITCHER STRIP (1-TAP GOVERNANCE & PORTAL BAR)
+         ========================================================= */}
+      <section className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 -mt-4 sm:-mt-6 relative z-20">
+        <div className="bg-white rounded-2xl border border-[#d8dadb] shadow-md p-2.5 sm:p-3 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#004b87] font-mono px-2 shrink-0 hidden sm:inline">
+            Direct Role Launch:
+          </span>
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
+            {[
+              { role: 'student' as UserRole, label: 'Student Workspace', badge: 'LMS' },
+              { role: 'faculty' as UserRole, label: 'Faculty E-Portal', badge: 'Teacher' },
+              { role: 'parent' as UserRole, label: 'Parents & Guardians', badge: 'Ward' },
+              { role: 'vc' as UserRole, label: 'VC Secretariat', badge: 'Exec' },
+              { role: 'dean' as UserRole, label: 'Dean (14 Faculties)', badge: 'BoF' },
+              { role: 'chairman' as UserRole, label: 'Chairman Office', badge: 'Dept' },
+              { role: 'hod' as UserRole, label: 'Director / HOD', badge: 'Inst' },
+              { role: 'admin' as UserRole, label: 'ITSC Admin', badge: 'Ops' }
+            ].map((item) => (
+              <button
+                key={item.role}
+                onClick={() => onSelectRole(item.role)}
+                className="min-h-[38px] px-3 py-1.5 rounded-xl bg-[#f4f6f8] hover:bg-[#0068b5] text-slate-800 hover:text-white border border-[#d8dadb] hover:border-[#0068b5] text-xs font-semibold whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all cursor-pointer group"
+              >
+                <span>{item.label}</span>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white group-hover:bg-white/20 text-[#004b87] group-hover:text-white font-bold">
+                  {item.badge}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -558,7 +608,12 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
              Comprehensive accredited programs catalog with SUTC
              pre-entry test admissions guide & live merit calculator
          ========================================================= */}
-      <section id="degree-programs-admissions" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <section
+        id="degree-programs-admissions"
+        onTouchStart={programsTabSwipe.onTouchStart}
+        onTouchEnd={programsTabSwipe.onTouchEnd}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6"
+      >
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-200 pb-3">
           <div>
@@ -638,57 +693,63 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
           </div>
         </div>
 
-        {/* Primary Tab Navigation */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-slate-200">
+        {/* Primary Tab Navigation — Smooth Mobile Swipe Left/Right */}
+        <div
+          ref={programsTabScrollRef}
+          onTouchStart={programsTabSwipe.onTouchStart}
+          onTouchEnd={programsTabSwipe.onTouchEnd}
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-slate-200 select-none"
+        >
           <button
+            data-nav-id="undergraduate"
             onClick={() => setProgramsActiveTab('undergraduate')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
+            className={`min-h-[42px] px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
               programsActiveTab === 'undergraduate'
-                ? 'bg-[#0a2342] text-white shadow-xs ring-1 ring-[#0a2342]'
+                ? 'bg-[#0068b5] text-white shadow-xs ring-1 ring-[#0068b5]'
                 : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <School className={`w-4 h-4 ${programsActiveTab === 'undergraduate' ? 'text-amber-300' : 'text-slate-500'}`} />
-            <span>Undergraduate Programs (BS / BBA / Pharm-D / LLB)</span>
+            <School className={`w-4 h-4 shrink-0 ${programsActiveTab === 'undergraduate' ? 'text-[#c8e27b]' : 'text-slate-500'}`} />
+            <span className="sm:hidden">Undergraduate (BS/BBA)</span>
+            <span className="hidden sm:inline">Undergraduate Programs (BS / BBA / Pharm-D / LLB)</span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
               programsActiveTab === 'undergraduate' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
             }`}>
-              {undergraduatePrograms.length} Offerings
+              {undergraduatePrograms.length}
             </span>
           </button>
 
           <button
+            data-nav-id="postgraduate"
             onClick={() => setProgramsActiveTab('postgraduate')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
+            className={`min-h-[42px] px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
               programsActiveTab === 'postgraduate'
-                ? 'bg-[#0a2342] text-white shadow-xs ring-1 ring-[#0a2342]'
+                ? 'bg-[#0068b5] text-white shadow-xs ring-1 ring-[#0068b5]'
                 : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <Award className={`w-4 h-4 ${programsActiveTab === 'postgraduate' ? 'text-amber-300' : 'text-slate-500'}`} />
-            <span>Postgraduate Programs (MS / M.Phil / PhD / MBA)</span>
+            <Award className={`w-4 h-4 shrink-0 ${programsActiveTab === 'postgraduate' ? 'text-[#c8e27b]' : 'text-slate-500'}`} />
+            <span className="sm:hidden">Postgraduate (MS/PhD)</span>
+            <span className="hidden sm:inline">Postgraduate Programs (MS / M.Phil / PhD / MBA)</span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
               programsActiveTab === 'postgraduate' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
             }`}>
-              {postgraduatePrograms.length} Research Tracks
+              {postgraduatePrograms.length}
             </span>
           </button>
 
           <button
+            data-nav-id="admissions"
             onClick={() => setProgramsActiveTab('admissions')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
+            className={`min-h-[42px] px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
               programsActiveTab === 'admissions'
-                ? 'bg-[#0a2342] text-white shadow-xs ring-1 ring-[#0a2342]'
+                ? 'bg-[#0068b5] text-white shadow-xs ring-1 ring-[#0068b5]'
                 : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <Calculator className={`w-4 h-4 ${programsActiveTab === 'admissions' ? 'text-amber-300' : 'text-slate-500'}`} />
-            <span>Admissions 2026–27 Guide &amp; Merit Calculator</span>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
-              programsActiveTab === 'admissions' ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-blue-50 text-blue-900 border border-blue-200'
-            }`}>
-              SUTC Testing Portal
-            </span>
+            <Calculator className={`w-4 h-4 shrink-0 ${programsActiveTab === 'admissions' ? 'text-[#c8e27b]' : 'text-slate-500'}`} />
+            <span className="sm:hidden">Admissions &amp; Merit Calc</span>
+            <span className="hidden sm:inline">Admissions 2026–27 Guide &amp; Merit Calculator</span>
           </button>
         </div>
 
@@ -1177,11 +1238,12 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
       </section>
 
       {/* =========================================================
-          PROGRAM DETAIL MODAL (WHEN USER CLICKS FULL DETAILS)
+          PROGRAM DETAIL MODAL (MOBILE BOTTOM SHEET + DESKTOP MODAL)
          ========================================================= */}
       {selectedProgramDetail && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 space-y-5 p-6 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 p-4 sm:p-6 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-150">
+            <div className="w-10 h-1.5 bg-slate-300 rounded-full mx-auto sm:hidden" />
             {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-slate-100 pb-4">
               <div className="space-y-1">
@@ -1343,10 +1405,16 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl text-xs font-medium overflow-x-auto">
+            <div
+              ref={circularScrollRef}
+              onTouchStart={circularSwipe.onTouchStart}
+              onTouchEnd={circularSwipe.onTouchEnd}
+              className="flex items-center gap-1 bg-white/10 p-1 rounded-xl text-xs font-medium overflow-x-auto no-scrollbar select-none"
+            >
               {(['All', 'Examinations', 'Admissions', 'Faculty', 'Syndicate'] as const).map(cat => (
                 <button
                   key={cat}
+                  data-nav-id={cat}
                   onClick={() => setCircularCategory(cat)}
                   className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap ${
                     circularCategory === cat
